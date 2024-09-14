@@ -14,6 +14,9 @@
     .byte $0
     .byte $0
 .segment "ZEROPAGE"
+    rc0:          .res 1
+    vramindex:    .res 1
+    framecounter: .res 1
 .segment "SRAM"
 .segment "WRAM"
 .segment "STARTUP"
@@ -56,9 +59,6 @@ RESET:
     BNE :-
 
     LDX #$00
-    
-    LDA #$FF      ; init VRAM buffer
-    STA $0300
 
     JSR vblankwait
 
@@ -98,26 +98,51 @@ initppu:
     STA $4014
     NOP
 
+    LDA #$FF      ; init VRAM buffer
+    STA $0300
+
     CLI                 ; clear interrups so NMI can be called
     LDA #%10000000      
     STA $2000           ; the left most bit of $2000 sets wheteher NMI is enabled or not
 
-    LDA #%00010000      ; enable sprites
+    LDA #%00011110      ; enable background and sprites
     STA $2001
 
 
 forever:
+    JSR nmiwait
+    LDX framecounter
+    LDA #$01
+    STA rc0
+    LDA #$20
+    JSR writevram
+
     JMP forever     ; an infinite loop when init code is run
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 NMI:
+    INC framecounter
     LDA #$02           ; OAM DMA
     STA $4014
 
     LDX #$00
+vrambuffer:
     LDA $0300,X
+    CMP #$FF        ; End of VRAM buffer
+    BEQ vrambufferdone
+    STA $2006
+    INX
+    LDA $0300,X
+    STA $2006
+    INX
+    LDA $0300,X
+    STA $2007
+    INX
+    JMP vrambuffer
 
-
+vrambufferdone:
+    LDA #$00
+    STA vramindex
     RTI
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
@@ -125,6 +150,29 @@ vblankwait:
     BIT $2002      ; returns bit 7 of ppustatus reg, which holds the vblank status with 0 being no vblank, 1 being vblank
     BPL vblankwait
     RTS
+
+nmiwait:
+    LDA framecounter
+:
+    CMP framecounter
+    BEQ :-
+    RTS
+
+writevram:         ; adds a write to the vram buffer (A: VRAM address MSB X: VRAM address LSB rc0: value)
+    LDY vramindex
+    STA $0300,Y
+    INY
+    TXA
+    STA $0300,Y
+    INY
+    LDA rc0
+    STA $0300,Y
+    INY
+    STY vramindex
+    LDA #$FF
+    STA $0300,Y
+    RTS
+
 
 palettedata:
     .byte $30, $10, $00, $0f, $30, $10, $00, $0f, $30, $10, $00, $0f, $30, $10, $00, $0f

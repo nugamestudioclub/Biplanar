@@ -1,5 +1,5 @@
 {
-    "executable": "C:\\cc65\\bin\\cl65.exe",
+    "executable": "/Users/eliregina/brew/opt/cc65/bin/cl65",
     "input": "main.s",
     "params": "--verbose --target nes -o game.nes -g -Wl --dbgfile,game.dbg"
 }
