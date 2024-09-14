@@ -58,9 +58,15 @@ RESET:
     CPX #$03
     BNE :-
 
-    LDX #$00
+    LDA #$0C
+    STA $8000
+    LDA #$00
+    STA $A000
 
     JSR vblankwait
+
+
+    LDX #$00
 
 clearmem:
     LDA #$00        ; can also do TXA as x is $#00
@@ -111,11 +117,6 @@ initppu:
 
 forever:
     JSR nmiwait
-    LDX framecounter
-    LDA #$01
-    STA rc0
-    LDA #$20
-    JSR writevram
 
     JMP forever     ; an infinite loop when init code is run
 
