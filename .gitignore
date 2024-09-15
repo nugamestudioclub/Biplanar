@@ -2,3 +2,4 @@
 *.nes
 *.dbg
 *.o
+cl65config.json
