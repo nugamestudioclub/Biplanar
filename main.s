@@ -25,7 +25,6 @@
     oam_index:     .res 1
 .segment "SRAM"
 .segment "WRAM"
-.segment "STARTUP"
 .segment "CODE"
 
 RESET:
@@ -186,7 +185,7 @@ nmiwait:
     BEQ :-
     RTS
 
-writevram:         ; adds a write to the vram buffer (A: VRAM address MSB, X: VRAM address LSB, Y: value)
+writevram:       ; adds a write to the vram buffer (A: VRAM address MSB, X: VRAM address LSB, Y: value)
     STY R0
     LDY vram_index
     STA $0300,Y
@@ -202,7 +201,7 @@ writevram:         ; adds a write to the vram buffer (A: VRAM address MSB, X: VR
     STA $0300,Y
     RTS
 
-drawsprite:      ; adds a sprite to OAM (R0: Tile Index, R1: X Position, R2: Y Position, R3: Attribute Byte)
+oamsprite:       ; adds a sprite to OAM (R0: Tile Index, R1: X Position, R2: Y Position, R3: Attribute Byte)
     LDY R2
     DEY          ; correct for Y offset
     TYA
@@ -219,6 +218,18 @@ drawsprite:      ; adds a sprite to OAM (R0: Tile Index, R1: X Position, R2: Y P
     STA $0200,X
     INX
     STX oam_index
+    RTS
+
+oamclear:        ; clears OAM
+    LDX #$00
+    LDA #$FF     ; this Y coordinate puts the sprite off screen
+:
+    STA $0200,X
+    INX
+    INX
+    INX
+    INX
+    BNE :-
     RTS
 
 
