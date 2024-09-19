@@ -14,13 +14,15 @@
     .byte $0
     .byte $0
 .segment "ZEROPAGE"
-    R0:          .res 1
-    R1:          .res 1
+    R0:            .res 1
+    R1:            .res 1
+    R2:            .res 1
+    R3:            .res 1
     vram_index:    .res 1
     frame_counter: .res 1
-    x_scroll:     .res 2
-    y_scroll:     .res 2
-    oam_index:    .res 1
+    x_scroll:      .res 2
+    y_scroll:      .res 2
+    oam_index:     .res 1
 .segment "SRAM"
 .segment "WRAM"
 .segment "STARTUP"
@@ -200,18 +202,20 @@ writevram:         ; adds a write to the vram buffer (A: VRAM address MSB, X: VR
     STA $0300,Y
     RTS
 
-drawsprite:      ; adds a sprite to OAM (A: Tile Index, X: X Position, Y: Y Position, R0: Attribute Byte)
+drawsprite:      ; adds a sprite to OAM (R0: Tile Index, R1: X Position, R2: Y Position, R3: Attribute Byte)
+    LDY R2
     DEY          ; correct for Y offset
-    STX R1
+    TYA
     LDX oam_index
-    STY $0200,X
+    STA $0200,X
     INX
-    LDY R1
-    STY $0200,X
-    INX
+    LDA R1
     STA $0200,X
     INX
     LDA R0
+    STA $0200,X
+    INX
+    LDA R3
     STA $0200,X
     INX
     STX oam_index
