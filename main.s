@@ -14,9 +14,13 @@
     .byte $0
     .byte $0
 .segment "ZEROPAGE"
-    rc0:          .res 1
-    vramindex:    .res 1
-    framecounter: .res 1
+    R0:          .res 1
+    R1:          .res 1
+    vram_index:    .res 1
+    frame_counter: .res 1
+    x_scroll:     .res 2
+    y_scroll:     .res 2
+    oam_index:    .res 1
 .segment "SRAM"
 .segment "WRAM"
 .segment "STARTUP"
@@ -84,6 +88,21 @@ clearmem:
 
     JSR vblankwait
 
+clearvram:
+    LDA #$20
+    STA $2006
+    LDA #$00
+    STA $2006
+    LDX #$00
+    LDY #$00
+:
+    STA $2007
+    INX
+    BNE :-
+    INY
+    CPY #$08
+    BNE :-
+
 loadpalettes:
     LDA $2002   ; read PPU status to reset PPU address
     LDA #$3F    ; Set PPU address to BG palette RAM ($3F00)
@@ -122,9 +141,15 @@ forever:
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 NMI:
-    INC framecounter
+    INC frame_counter
     LDA #$02           ; OAM DMA
     STA $4014
+
+setscroll:
+    LDA x_scroll
+    STA $2005
+    LDA y_scroll
+    STA $2005
 
     LDX #$00
 vrambuffer:
@@ -143,7 +168,7 @@ vrambuffer:
 
 vrambufferdone:
     LDA #$00
-    STA vramindex
+    STA vram_index
     RTI
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
@@ -153,25 +178,43 @@ vblankwait:
     RTS
 
 nmiwait:
-    LDA framecounter
+    LDA frame_counter
 :
-    CMP framecounter
+    CMP frame_counter
     BEQ :-
     RTS
 
-writevram:         ; adds a write to the vram buffer (A: VRAM address MSB X: VRAM address LSB rc0: value)
-    LDY vramindex
+writevram:         ; adds a write to the vram buffer (A: VRAM address MSB, X: VRAM address LSB, Y: value)
+    STY R0
+    LDY vram_index
     STA $0300,Y
     INY
     TXA
     STA $0300,Y
     INY
-    LDA rc0
+    LDA R0
     STA $0300,Y
     INY
-    STY vramindex
+    STY vram_index
     LDA #$FF
     STA $0300,Y
+    RTS
+
+drawsprite:      ; adds a sprite to OAM (A: Tile Index, X: X Position, Y: Y Position, R0: Attribute Byte)
+    DEY          ; correct for Y offset
+    STX R1
+    LDX oam_index
+    STY $0200,X
+    INX
+    LDY R1
+    STY $0200,X
+    INX
+    STA $0200,X
+    INX
+    LDA R0
+    STA $0200,X
+    INX
+    STX oam_index
     RTS
 
 
