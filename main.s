@@ -24,8 +24,8 @@
     y_scroll:      .res 2
     oam_index:     .res 1
 .segment "SRAM"
-.segment "WRAM"
-.segment "CODE"
+.segment "PRG_RAM"
+.segment "FIXED"
 
 RESET:
     SEI             ; disable IRQs
