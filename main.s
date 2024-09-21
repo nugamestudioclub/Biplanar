@@ -23,6 +23,7 @@
     x_scroll:      .res 2
     y_scroll:      .res 2
     oam_index:     .res 1
+    controller:    .res 1
 .segment "SRAM"
 .segment "PRG_RAM"
 .segment "FIXED"
@@ -135,10 +136,21 @@ initppu:
     STA $2001
 
 
-forever:
-    JSR nmiwait ; wait until next frame
+mainloop:           ; the main game tick loop
+    JSR nmiwait     ; wait until next frame
 
-    ; Game stuff here
+
+    LDA #$01        ; read controller
+    STA $4016
+    STA controller  ; initialize the controller variable to $01 so that once the 8 button values are shifted in, 1 will be placed into the carry
+    LSR a
+    STA $4016
+:
+    LDA $4016
+    LSR a           ; move the button value from bit 0 of A to the carry flag
+    ROL controller  ; move the button value from the carry flag to bit 0 of the controller variable, shifting the other buttons as a result
+    BCC :-          ; the carry flag will be 1 if the controller variable has been shifted left 8 times, indicating that all 8 buttons have been read
+
 
 
     LDA #$00
@@ -152,7 +164,7 @@ forever:
 
     JSR oamsprite
 
-    JMP forever     ; an infinite loop when init code is run
+    JMP mainloop
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 NMI:
