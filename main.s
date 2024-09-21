@@ -24,8 +24,10 @@
     y_scroll:      .res 2
     oam_index:     .res 1
     controller:    .res 1
-    x_pos:         .res 1
-    y_pos:         .res 1
+    x_pos:         .res 2
+    y_pos:         .res 2
+    x_vel:         .res 2
+    y_vel:         .res 2
 .segment "SRAM"
 .segment "PRG_RAM"
 .segment "FIXED"
@@ -163,23 +165,64 @@ mainloop:           ; the main game tick loop
     LDA controller  ; right button
     AND #%00000001
     BEQ @rightdone
-    INC x_pos
+    CLC             ; increase the X velocity by an acceleration amount of 0.25
+    LDA x_vel+1
+    ADC #$40
+    STA x_vel+1
+    LDA x_vel
+    ADC #$00
+    STA x_vel
 @rightdone:
     LDA controller  ; left button
     AND #%00000010
     BEQ @leftdone
-    DEC x_pos
+    CLC             ; decrease the X velocity by an acceleration amount of 0.25
+    LDA x_vel+1
+    SBC #$40
+    STA x_vel+1
+    LDA x_vel
+    SBC #$00
+    STA x_vel
 @leftdone:
     LDA controller  ; down button
     AND #%00000100
     BEQ @downdone
-    INC y_pos
+    CLC             ; increase the Y velocity by an acceleration amount of 0.25
+    LDA y_vel+1
+    ADC #$40
+    STA y_vel+1
+    LDA y_vel
+    ADC #$00
+    STA y_vel
 @downdone:
     LDA controller  ; up button
     AND #%00001000
     BEQ @updone
-    DEC y_pos
+    CLC             ; decrease the Y velocity by an acceleration amount of 0.25
+    LDA y_vel+1
+    SBC #$40
+    STA y_vel+1
+    LDA y_vel
+    SBC #$00
+    STA y_vel
 @updone:
+
+
+CLC             ; apply X velocity
+    LDA x_pos+1
+    ADC x_vel+1
+    STA x_pos+1
+    LDA x_pos
+    ADC x_vel
+    STA x_pos
+
+    CLC             ; apply Y velocity
+    LDA y_pos+1
+    ADC y_vel+1
+    STA y_pos+1
+    LDA y_pos
+    ADC y_vel
+    STA y_pos
 
 
     JSR oamclear
