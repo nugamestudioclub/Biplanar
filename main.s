@@ -141,8 +141,8 @@ initppu:
 
 initgame:
     LDA #$80
-    STA x_pos
-    STA y_pos
+    STA x_pos+1
+    STA y_pos+1
 
 
 mainloop:           ; the main game tick loop
@@ -166,72 +166,72 @@ mainloop:           ; the main game tick loop
     AND #%00000001
     BEQ @rightdone
     CLC             ; increase the X velocity by an acceleration amount of 0.25
-    LDA x_vel+1
+    LDA x_vel+0
     ADC #$40
-    STA x_vel+1
-    LDA x_vel
+    STA x_vel+0
+    LDA x_vel+1
     ADC #$00
-    STA x_vel
+    STA x_vel+1
 @rightdone:
     LDA controller  ; left button
     AND #%00000010
     BEQ @leftdone
-    CLC             ; decrease the X velocity by an acceleration amount of 0.25
-    LDA x_vel+1
+    SEC             ; decrease the X velocity by an acceleration amount of 0.25
+    LDA x_vel+0
     SBC #$40
-    STA x_vel+1
-    LDA x_vel
+    STA x_vel+0
+    LDA x_vel+1
     SBC #$00
-    STA x_vel
+    STA x_vel+1
 @leftdone:
     LDA controller  ; down button
     AND #%00000100
     BEQ @downdone
     CLC             ; increase the Y velocity by an acceleration amount of 0.25
-    LDA y_vel+1
+    LDA y_vel+0
     ADC #$40
-    STA y_vel+1
-    LDA y_vel
+    STA y_vel+0
+    LDA y_vel+1
     ADC #$00
-    STA y_vel
+    STA y_vel+1
 @downdone:
     LDA controller  ; up button
     AND #%00001000
     BEQ @updone
-    CLC             ; decrease the Y velocity by an acceleration amount of 0.25
-    LDA y_vel+1
+    SEC             ; decrease the Y velocity by an acceleration amount of 0.25
+    LDA y_vel+0
     SBC #$40
-    STA y_vel+1
-    LDA y_vel
+    STA y_vel+0
+    LDA y_vel+1
     SBC #$00
-    STA y_vel
+    STA y_vel+1
 @updone:
 
 
 CLC             ; apply X velocity
+    LDA x_pos+0
+    ADC x_vel+0
+    STA x_pos+0
     LDA x_pos+1
     ADC x_vel+1
     STA x_pos+1
-    LDA x_pos
-    ADC x_vel
-    STA x_pos
 
     CLC             ; apply Y velocity
+    LDA y_pos+0
+    ADC y_vel+0
+    STA y_pos+0
     LDA y_pos+1
     ADC y_vel+1
     STA y_pos+1
-    LDA y_pos
-    ADC y_vel
-    STA y_pos
 
 
     JSR oamclear
 
     LDA #$00
     STA R0
-    LDA x_pos
+    LDA x_pos+1
     STA R1
-    LDA y_pos
+    LDA y_pos+1
     STA R2
     LDA #%10000000
     STA R3
