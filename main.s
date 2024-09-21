@@ -129,7 +129,7 @@ initppu:
     STA $0300
 
     CLI                 ; clear interrups so NMI can be called
-    LDA #%10000000      
+    LDA #%10010000      
     STA $2000           ; the left most bit of $2000 sets wheteher NMI is enabled or not
 
     LDA #%00011110      ; enable background and sprites
@@ -152,16 +152,16 @@ mainloop:           ; the main game tick loop
     BCC :-          ; the carry flag will be 1 if the controller variable has been shifted left 8 times, indicating that all 8 buttons have been read
 
 
+    JSR oamclear
 
     LDA #$00
     STA R0
-    STA R3
-
     LDA #$80
     STA R1
+    LDA #$82
     STA R2
-
-
+    LDA #%10000000
+    STA R3
     JSR oamsprite
 
     JMP mainloop
@@ -234,13 +234,13 @@ oamsprite:       ; adds a sprite to OAM (R0: Tile Index, R1: X Position, R2: Y P
     LDX oam_index
     STA $0200,X
     INX
-    LDA R1
-    STA $0200,X
-    INX
     LDA R0
     STA $0200,X
     INX
     LDA R3
+    STA $0200,X
+    INX
+    LDA R1
     STA $0200,X
     INX
     STX oam_index
@@ -256,6 +256,7 @@ oamclear:        ; clears OAM
     INX
     INX
     BNE :-
+    STX oam_index
     RTS
 
 
