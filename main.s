@@ -152,7 +152,7 @@ mainloop:           ; the main game tick loop
     BCC :-          ; the carry flag will be 1 if the controller variable has been shifted left 8 times, indicating that all 8 buttons have been read
 
 
-    JSR oamclear
+    JSR oamclear    ; draw sprites
 
     LDA #$00
     STA R0
