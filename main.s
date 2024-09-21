@@ -208,7 +208,7 @@ mainloop:           ; the main game tick loop
 @updone:
 
 
-CLC             ; apply X velocity
+    CLC             ; apply X velocity
     LDA x_pos+0
     ADC x_vel+0
     STA x_pos+0
