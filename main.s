@@ -136,7 +136,21 @@ initppu:
 
 
 forever:
-    JSR nmiwait
+    JSR nmiwait ; wait until next frame
+
+    ; Game stuff here
+
+
+    LDA #$00
+    STA R0
+    STA R3
+
+    LDA #$80
+    STA R1
+    STA R2
+
+
+    JSR oamsprite
 
     JMP forever     ; an infinite loop when init code is run
 
