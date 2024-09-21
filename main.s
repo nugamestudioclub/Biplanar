@@ -24,6 +24,8 @@
     y_scroll:      .res 2
     oam_index:     .res 1
     controller:    .res 1
+    x_pos:         .res 1
+    y_pos:         .res 1
 .segment "SRAM"
 .segment "PRG_RAM"
 .segment "FIXED"
@@ -135,6 +137,11 @@ initppu:
     LDA #%00011110      ; enable background and sprites
     STA $2001
 
+initgame:
+    LDA #$80
+    STA x_pos
+    STA y_pos
+
 
 mainloop:           ; the main game tick loop
     JSR nmiwait     ; wait until next frame
@@ -152,13 +159,36 @@ mainloop:           ; the main game tick loop
     BCC :-          ; the carry flag will be 1 if the controller variable has been shifted left 8 times, indicating that all 8 buttons have been read
 
 
+
+    LDA controller  ; right button
+    AND #%00000001
+    BEQ @rightdone
+    INC x_pos
+@rightdone:
+    LDA controller  ; left button
+    AND #%00000010
+    BEQ @leftdone
+    DEC x_pos
+@leftdone:
+    LDA controller  ; down button
+    AND #%00000100
+    BEQ @downdone
+    INC y_pos
+@downdone:
+    LDA controller  ; up button
+    AND #%00001000
+    BEQ @updone
+    DEC y_pos
+@updone:
+
+
     JSR oamclear
 
     LDA #$00
     STA R0
-    LDA #$80
+    LDA x_pos
     STA R1
-    LDA #$82
+    LDA y_pos
     STA R2
     LDA #%10000000
     STA R3
