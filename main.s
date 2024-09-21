@@ -184,28 +184,6 @@ mainloop:           ; the main game tick loop
     SBC #$00
     STA x_vel+1
 @leftdone:
-    LDA controller  ; down button
-    AND #%00000100
-    BEQ @downdone
-    CLC             ; increase the Y velocity by an acceleration amount of 0.25
-    LDA y_vel+0
-    ADC #$40
-    STA y_vel+0
-    LDA y_vel+1
-    ADC #$00
-    STA y_vel+1
-@downdone:
-    LDA controller  ; up button
-    AND #%00001000
-    BEQ @updone
-    SEC             ; decrease the Y velocity by an acceleration amount of 0.25
-    LDA y_vel+0
-    SBC #$40
-    STA y_vel+0
-    LDA y_vel+1
-    SBC #$00
-    STA y_vel+1
-@updone:
 
 
     CLC             ; apply X velocity
