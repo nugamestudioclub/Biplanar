@@ -24,6 +24,10 @@
     y_scroll:      .res 2
     oam_index:     .res 1
     controller:    .res 1
+    x_pos:         .res 2
+    y_pos:         .res 2
+    x_vel:         .res 2
+    y_vel:         .res 2
 .segment "SRAM"
 .segment "PRG_RAM"
 .segment "FIXED"
@@ -135,6 +139,11 @@ initppu:
     LDA #%00011110      ; enable background and sprites
     STA $2001
 
+initgame:
+    LDA #$80
+    STA x_pos+1
+    STA y_pos+1
+
 
 mainloop:           ; the main game tick loop
     JSR nmiwait     ; wait until next frame
@@ -152,13 +161,55 @@ mainloop:           ; the main game tick loop
     BCC :-          ; the carry flag will be 1 if the controller variable has been shifted left 8 times, indicating that all 8 buttons have been read
 
 
-    JSR oamclear    ; draw sprites
+
+    LDA controller  ; right button
+    AND #%00000001
+    BEQ @rightdone
+    CLC             ; increase the X velocity by an acceleration amount of 0.25
+    LDA x_vel+0
+    ADC #$40
+    STA x_vel+0
+    LDA x_vel+1
+    ADC #$00
+    STA x_vel+1
+@rightdone:
+    LDA controller  ; left button
+    AND #%00000010
+    BEQ @leftdone
+    SEC             ; decrease the X velocity by an acceleration amount of 0.25
+    LDA x_vel+0
+    SBC #$40
+    STA x_vel+0
+    LDA x_vel+1
+    SBC #$00
+    STA x_vel+1
+@leftdone:
+
+
+    CLC             ; apply X velocity
+    LDA x_pos+0
+    ADC x_vel+0
+    STA x_pos+0
+    LDA x_pos+1
+    ADC x_vel+1
+    STA x_pos+1
+
+    CLC             ; apply Y velocity
+    LDA y_pos+0
+    ADC y_vel+0
+    STA y_pos+0
+    LDA y_pos+1
+    ADC y_vel+1
+    STA y_pos+1
+
+
+    JSR oamclear
 
     LDA #$00
     STA R0
-    LDA #$80
+    LDA x_pos+1
     STA R1
-    LDA #$82
+    LDA y_pos+1
     STA R2
     LDA #%10000000
     STA R3
