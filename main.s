@@ -140,7 +140,7 @@ initppu:
     STA $2001
 
 initgame:
-    LDA #$80
+    LDA #$80        ; init player position
     STA x_pos+1
     STA y_pos+1
 
