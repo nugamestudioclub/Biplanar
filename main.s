@@ -172,7 +172,7 @@ mainloop:           ; the main game tick loop
     LDA x_vel+1
     ADC #$00
     STA x_vel+1
-    JMP @moved
+    JMP applyvelocity
 @noright:
     LDA controller  ; left button
     AND #%00000010
@@ -184,10 +184,33 @@ mainloop:           ; the main game tick loop
     LDA x_vel+1
     SBC #$00
     STA x_vel+1
-    JMP @moved
+    JMP applyvelocity
 @noleft:
-    
-@moved:
+    LDA x_vel+0
+    BNE applydrag
+    LDA x_vel+1
+    BNE applydrag
+    JMP applyvelocity
+applydrag:
+    LDA x_vel+1
+    BMI @negative
+    SEC
+    LDA x_vel+0
+    SBC #$40
+    STA x_vel+0
+    LDA x_vel+1
+    SBC #$00
+    STA x_vel+1
+    JMP applyvelocity
+@negative:
+    CLC
+    LDA x_vel+0
+    ADC #$40
+    STA x_vel+0
+    LDA x_vel+1
+    ADC #$00
+    STA x_vel+1
+applyvelocity:
 
 
     CLC             ; apply X velocity
