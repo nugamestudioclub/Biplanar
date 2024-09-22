@@ -164,7 +164,7 @@ mainloop:           ; the main game tick loop
 
     LDA controller  ; right button
     AND #%00000001
-    BEQ @rightdone
+    BEQ @noright
     CLC             ; increase the X velocity by an acceleration amount of 0.25
     LDA x_vel+0
     ADC #$40
@@ -172,10 +172,11 @@ mainloop:           ; the main game tick loop
     LDA x_vel+1
     ADC #$00
     STA x_vel+1
-@rightdone:
+    JMP @moved
+@noright:
     LDA controller  ; left button
     AND #%00000010
-    BEQ @leftdone
+    BEQ @noleft
     SEC             ; decrease the X velocity by an acceleration amount of 0.25
     LDA x_vel+0
     SBC #$40
@@ -183,7 +184,10 @@ mainloop:           ; the main game tick loop
     LDA x_vel+1
     SBC #$00
     STA x_vel+1
-@leftdone:
+    JMP @moved
+@noleft:
+    
+@moved:
 
 
     CLC             ; apply X velocity
