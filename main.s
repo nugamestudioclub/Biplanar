@@ -28,7 +28,7 @@
     y_pos:         .res 2
     x_vel:         .res 2
     y_vel:         .res 2
-.segment "SRAM"
+.segment "RAM"
 .segment "PRG_RAM"
 .segment "FIXED"
 
