@@ -36,7 +36,6 @@
 
 
 .include "init.s"
-.include "nmi.s"
 
 
 mainloop:           ; the main game tick loop
@@ -137,6 +136,8 @@ applyvelocity:
     JSR oamsprite
 
     JMP mainloop
+
+.include "nmi.s"
 
 
 vblankwait:
