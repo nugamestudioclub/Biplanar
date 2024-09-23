@@ -1,7 +1,7 @@
 NMI:
     INC frame_counter
     LDA #$02           ; OAM DMA
-    STA $4014
+    STA OAMDMA
 
 setscroll:
     LDA x_scroll
@@ -11,15 +11,15 @@ setscroll:
 
     LDX #$00
 vrambuffer:
-    LDA $0300,X
+    LDA VRAMBUF,X
     CMP #$FF        ; End of VRAM buffer
     BEQ vrambufferdone
     STA PPUADDR
     INX
-    LDA $0300,X
+    LDA VRAMBUF,X
     STA PPUADDR
     INX
-    LDA $0300,X
+    LDA VRAMBUF,X
     STA PPUDATA
     INX
     JMP vrambuffer
@@ -27,4 +27,3 @@ vrambuffer:
 vrambufferdone:
     LDA #$00
     STA vram_index
-    RTI

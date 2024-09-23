@@ -140,7 +140,7 @@ applyvelocity:
 
 
 vblankwait:
-    BIT $2002      ; returns bit 7 of ppustatus reg, which holds the vblank status with 0 being no vblank, 1 being vblank
+    BIT PPUSTATUS   ; returns bit 7 of ppustatus reg, which holds the vblank status with 0 being no vblank, 1 being vblank
     BPL vblankwait
     RTS
 
@@ -151,46 +151,46 @@ nmiwait:
     BEQ :-
     RTS
 
-writevram:       ; adds a write to the vram buffer (A: VRAM address MSB, X: VRAM address LSB, Y: value)
+writevram:          ; adds a write to the vram buffer (A: VRAM address MSB, X: VRAM address LSB, Y: value)
     STY R0
     LDY vram_index
-    STA $0300,Y
+    STA VRAMBUF,Y
     INY
     TXA
-    STA $0300,Y
+    STA VRAMBUF,Y
     INY
     LDA R0
-    STA $0300,Y
+    STA VRAMBUF,Y
     INY
     STY vram_index
     LDA #$FF
-    STA $0300,Y
+    STA VRAMBUF,Y
     RTS
 
-oamsprite:       ; adds a sprite to OAM (R0: Tile Index, R1: X Position, R2: Y Position, R3: Attribute Byte)
+oamsprite:          ; adds a sprite to OAM (R0: Tile Index, R1: X Position, R2: Y Position, R3: Attribute Byte)
     LDY R2
-    DEY          ; correct for Y offset
+    DEY             ; correct for Y offset
     TYA
     LDX oam_index
-    STA $0200,X
+    STA OAMBUF,X
     INX
     LDA R0
-    STA $0200,X
+    STA OAMBUF,X
     INX
     LDA R3
-    STA $0200,X
+    STA OAMBUF,X
     INX
     LDA R1
-    STA $0200,X
+    STA OAMBUF,X
     INX
     STX oam_index
     RTS
 
-oamclear:        ; clears OAM
+oamclear:           ; clears OAM
     LDX #$00
-    LDA #$FF     ; this Y coordinate puts the sprite off screen
+    LDA #$FF        ; this Y coordinate puts the sprite off screen
 :
-    STA $0200,X
+    STA OAMBUF,X
     INX
     INX
     INX

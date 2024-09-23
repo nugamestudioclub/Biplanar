@@ -1,4 +1,5 @@
-OAM       = $0200
+OAMBUF    = $0200
+VRAMBUF   = $0300
 
 PPUCTRL   = $2000
 PPUMASK   = $2001
