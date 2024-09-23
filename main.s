@@ -1,3 +1,5 @@
+.include "defines.s"
+
 .segment "HEADER"       ; Setting up the header, needed for emulators to understand what to do with the file, not needed for actual cartridges
     .byte "NES"         ; The beginning of the HEADER of iNES header
     .byte $1a           ; Signature of iNES header that the emulator will look for
@@ -32,8 +34,9 @@
 .segment "PRG_RAM"
 .segment "FIXED"
 
-RESET:
+
 .include "init.s"
+.include "nmi.s"
 
 
 mainloop:           ; the main game tick loop
@@ -41,12 +44,12 @@ mainloop:           ; the main game tick loop
 
 
     LDA #$01        ; read controller
-    STA $4016
+    STA JOY1
     STA controller  ; initialize the controller variable to $01 so that once the 8 button values are shifted in, 1 will be placed into the carry
     LSR a
-    STA $4016
+    STA JOY1
 :
-    LDA $4016
+    LDA JOY1
     LSR a           ; move the button value from bit 0 of A to the carry flag
     ROL controller  ; move the button value from the carry flag to bit 0 of the controller variable, shifting the other buttons as a result
     BCC :-          ; the carry flag will be 1 if the controller variable has been shifted left 8 times, indicating that all 8 buttons have been read
@@ -135,38 +138,6 @@ applyvelocity:
 
     JMP mainloop
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-NMI:
-    INC frame_counter
-    LDA #$02           ; OAM DMA
-    STA $4014
-
-setscroll:
-    LDA x_scroll
-    STA $2005
-    LDA y_scroll
-    STA $2005
-
-    LDX #$00
-vrambuffer:
-    LDA $0300,X
-    CMP #$FF        ; End of VRAM buffer
-    BEQ vrambufferdone
-    STA $2006
-    INX
-    LDA $0300,X
-    STA $2006
-    INX
-    LDA $0300,X
-    STA $2007
-    INX
-    JMP vrambuffer
-
-vrambufferdone:
-    LDA #$00
-    STA vram_index
-    RTI
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 vblankwait:
     BIT $2002      ; returns bit 7 of ppustatus reg, which holds the vblank status with 0 being no vblank, 1 being vblank

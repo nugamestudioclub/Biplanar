@@ -1,18 +1,19 @@
+RESET:
     SEI             ; disable IRQs
     CLD             ; disable decimal mode
     LDX #$40
-    STX $4017       ; disable APU frame counter IRQ - disable sound
+    STX JOY2        ; disable APU frame counter IRQ - disable sound
     LDX #$ff
     TXS             ; setup stack starting at FF as it decrements instead if increments
     INX             ; overflow X reg to $00
-    STX $2000       ; disable NMI - PPUCTRL reg
-    STX $2001       ; disable rendering - PPUMASK reg
+    STX PPUCTRL     ; disable NMI - PPUCTRL reg
+    STX PPUMASK     ; disable rendering - PPUMASK reg
     STX $4010       ; disable DMC IRQs
 
 
 :
-    STX $8000       ; init CHR banks
-    STX $A000
+    STX MAPCMD      ; init CHR banks
+    STX MAPDATA
     INX
     CPX #$08
     BNE :-
@@ -20,23 +21,23 @@
     LDX #$00
 
 
-    LDY #$08       ; init PRG banks
-    STY $8000
+    LDY #BNKPRG0     ; init PRG banks
+    STY MAPCMD
     LDA #%11000000
-    STA $A000
+    STA MAPDATA
     INY
 :
-    STY $8000
-    STX $A000
+    STY MAPCMD
+    STX MAPDATA
     INY
     INX
     CPX #$03
     BNE :-
 
-    LDA #$0C
-    STA $8000
-    LDA #$00
-    STA $A000
+    LDA #MIRROR
+    STA MAPCMD
+    LDA #$00        ; horizontal mirroring
+    STA MAPDATA
 
     JSR vblankwait
 
@@ -61,13 +62,13 @@ clearmem:
 
 clearvram:
     LDA #$20
-    STA $2006
+    STA PPUADDR
     LDA #$00
-    STA $2006
+    STA PPUADDR
     LDX #$00
     LDY #$00
 :
-    STA $2007
+    STA PPUDATA
     INX
     BNE :-
     INY
@@ -75,23 +76,23 @@ clearvram:
     BNE :-
 
 loadpalettes:
-    LDA $2002   ; read PPU status to reset PPU address
-    LDA #$3F    ; Set PPU address to BG palette RAM ($3F00)
-    STA $2006
+    LDA PPUSTATUS   ; read PPU status to reset PPU address
+    LDA #$3F        ; Set PPU address to BG palette RAM ($3F00)
+    STA PPUADDR
     LDA #$00
-    STA $2006
+    STA PPUADDR
 
     LDX #$00
 :
     LDA palettedata,X
-    STA $2007
+    STA PPUDATA
     INX
     CPX #$20
     BNE :-      ; using anonymous label, don't use these too often unless travelling very small distances in code
 
 initppu:
     LDA #$02            ; OAM DMA
-    STA $4014
+    STA OAMDMA
     NOP
 
     LDA #$FF      ; init VRAM buffer
@@ -99,10 +100,10 @@ initppu:
 
     CLI                 ; clear interrups so NMI can be called
     LDA #%10010000      
-    STA $2000           ; the left most bit of $2000 sets wheteher NMI is enabled or not
+    STA PPUCTRL         ; the left most bit of $2000 sets wheteher NMI is enabled or not
 
     LDA #%00011110      ; enable background and sprites
-    STA $2001
+    STA PPUMASK
 
 initgame:
     LDA #$80        ; init player position
