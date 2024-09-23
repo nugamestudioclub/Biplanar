@@ -27,3 +27,4 @@ vrambuffer:
 vrambufferdone:
     LDA #$00
     STA vram_index
+    RTI
