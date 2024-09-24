@@ -25,6 +25,12 @@ mainloop:           ; the main game tick loop
     LDA x_vel+1
     ADC #$00
     STA x_vel+1
+    CMP #$04
+    BCC applyvelocity
+    LDA #$00
+    STA x_vel+0
+    LDA #$04
+    STA x_vel+1
     JMP applyvelocity
 @noright:
     LDA controller  ; left button
@@ -36,6 +42,12 @@ mainloop:           ; the main game tick loop
     STA x_vel+0
     LDA x_vel+1
     SBC #$00
+    STA x_vel+1
+    CMP #$FC
+    BCS applyvelocity
+    LDA #$FF
+    STA x_vel+0
+    LDA #$FC
     STA x_vel+1
     JMP applyvelocity
 @noleft:
@@ -81,8 +93,6 @@ applydrag:
     ADC #$00
     STA x_vel+1
 applyvelocity:
-
-
     CLC             ; apply X velocity
     LDA x_pos+0
     ADC x_vel+0
