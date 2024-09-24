@@ -47,18 +47,32 @@ mainloop:           ; the main game tick loop
 applydrag:
     LDA x_vel+1
     BMI @negative
+    BNE :+          ; positive velocity drag
+    LDA x_vel+0
+    CMP #$80
+    BCS :+
+    LDA #$00
+    STA x_vel+0
+    JMP applyvelocity
+:
     SEC
     LDA x_vel+0
-    SBC #$40
+    SBC #$80
     STA x_vel+0
     LDA x_vel+1
     SBC #$00
     STA x_vel+1
     JMP applyvelocity
-@negative:
+@negative:          ; negative velocity drag
+    CMP #$FF
+    BNE :+
+    LDA x_vel+0
+    CMP #80
+    BCC :+
+:
     CLC
     LDA x_vel+0
-    ADC #$40
+    ADC #$80
     STA x_vel+0
     LDA x_vel+1
     ADC #$00
