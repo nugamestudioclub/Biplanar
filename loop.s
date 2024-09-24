@@ -67,8 +67,11 @@ applydrag:
     CMP #$FF
     BNE :+
     LDA x_vel+0
-    CMP #80
+    CMP #81
     BCC :+
+    LDA #$00
+    STA x_vel+0
+    STA x_vel+1
 :
     CLC
     LDA x_vel+0
