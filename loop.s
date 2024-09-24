@@ -43,7 +43,7 @@ mainloop:           ; the main game tick loop
     LDA x_vel+1
     SBC #$00
     STA x_vel+1
-    CMP #$FC
+    CMP #$FD
     BCS applyvelocity
     LDA #$FF
     STA x_vel+0
