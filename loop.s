@@ -25,6 +25,7 @@ mainloop:           ; the main game tick loop
     LDA x_vel+1
     ADC #$00
     STA x_vel+1
+    BMI applyvelocity
     CMP #$04
     BCC applyvelocity
     LDA #$00
@@ -43,9 +44,10 @@ mainloop:           ; the main game tick loop
     LDA x_vel+1
     SBC #$00
     STA x_vel+1
+    BPL applyvelocity
     CMP #$FD
     BCS applyvelocity
-    LDA #$FF
+    LDA #$00
     STA x_vel+0
     LDA #$FC
     STA x_vel+1
