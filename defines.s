@@ -40,3 +40,6 @@ MIRROR    = $0C     ; ---- --MM -> Nametable mirroring configuration (M): 0 = Ve
 IRQCTRL   = $0D     ; C--- ---T -> IRQ counter enable (C), IRQ enable (T)
 IQRLOW    = $0E     ; LLLL LLLL -> IRQ counter low byte
 IRQHIGH   = $0F     ; HHHH HHHH -> IRQ counter high byte
+
+PLAYERWIDTH = 8
+PLAYERHEIGHT = 16

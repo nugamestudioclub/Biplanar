@@ -14,6 +14,11 @@
     x_vel:         .res 2     ; X velocity of the player (LSB: subpixel velocity, MSB: pixel velocity)
     y_vel:         .res 2     ; Y velocity of the player (LSB: subpixel velocity, MSB: pixel velocity)
 
+    x_eject:       .res 1
+    y_eject:       .res 1
+    collision:     .res 1
+    on_ground:     .res 1
+
 .segment "RAM"                ; The rest of internal RAM after ZP, the OAM buffer, and the VRAM buffer
     tilemap:       .res 240   ; A map that stores which tiles are solid
 .segment "PRG_RAM"            ; Extra cartridge RAM
