@@ -102,8 +102,15 @@ gravity:
     BCS :+
 applygravity:
     CLC
-    LDA y_vel+0
-    ADC #$80
+    LDA controller
+    AND #%10000000
+    BNE lowgrav
+    LDA #$C0
+    JMP gravready
+lowgrav:
+    LDA #$40
+gravready:
+    ADC y_vel+0
     STA y_vel+0
     LDA y_vel+1
     ADC #$00
