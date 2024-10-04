@@ -30,6 +30,7 @@
     y_eject:       .res 1
     collision:     .res 1
     on_ground:     .res 1
+    jumping:       .res 1
 
 .segment "RAM"                ; The rest of internal RAM after ZP, the OAM buffer, and the VRAM buffer
     tilemap:       .res 240   ; A map that stores which tiles are solid

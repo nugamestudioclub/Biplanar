@@ -97,20 +97,43 @@ applydrag:
 
 gravity:
     LDA y_vel+1
+    BMI applygravity
     CMP #$05
-    BCC :+
+    BCS :+
+applygravity:
     CLC
     LDA y_vel+0
-    ADC #$C0
+    ADC #$80
     STA y_vel+0
     LDA y_vel+1
     ADC #$00
     STA y_vel+1
+    JMP handlejump
 :
     LDA #$00
     STA y_vel+0
     LDA #$05
     STA y_vel+1
+
+handlejump:
+    LDA on_ground
+    BEQ applyvelocity
+    LDA controller
+    AND #%10000000
+    BEQ releasejump
+    LDA jumping
+    BNE applyvelocity
+    LDX #$00
+    STX on_ground
+    INX
+    STX jumping
+    LDA #$F9
+    STA y_vel+1
+    JMP applyvelocity
+releasejump:
+    LDA #$00
+    STA jumping
+
 
 applyvelocity:
     CLC                ; apply X velocity
