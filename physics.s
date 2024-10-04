@@ -6,11 +6,11 @@ bg_collision:       ; collides the player with the background tiles
     STA on_ground
     LDA x_pos+1
     CLC
-    ADC #$PLAYERWIDTH-1
+    ADC #PLAYERWIDTH-1
     STA R0          ; right edge
-    LDA Y_pos+1
+    LDA y_pos+1
     CLC
-    ADC #$PLAYERHEIGHT-1
+    ADC #PLAYERHEIGHT-1
     STA R1          ; bottom edge
 
 
@@ -25,7 +25,7 @@ bg_collision:       ; collides the player with the background tiles
     CLC
     ADC R2
     TAX
-    STA tilemap,X
+    LDA tilemap,X
     BEQ :+
     INC collision
     LDA x_pos+1
@@ -50,7 +50,7 @@ bg_collision:       ; collides the player with the background tiles
     CLC
     ADC R2
     TAX
-    STA tilemap,X
+    LDA tilemap,X
     BEQ :+
     INC collision
     LDA R0
@@ -75,7 +75,7 @@ bg_collision:       ; collides the player with the background tiles
     CLC
     ADC R2
     TAX
-    STA tilemap,X
+    LDA tilemap,X
     BEQ :+
     INC collision
     INC on_ground
@@ -101,7 +101,7 @@ bg_collision:       ; collides the player with the background tiles
     CLC
     ADC R2
     TAX
-    STA tilemap,X
+    LDA tilemap,X
     BEQ :+
     INC collision
     INC on_ground

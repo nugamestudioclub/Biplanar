@@ -9,6 +9,7 @@
 .include "loop.s"
 .include "nmi.s"
 .include "ppulib.s"
+.include "physics.s"
 
 
 palettedata:
