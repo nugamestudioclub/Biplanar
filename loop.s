@@ -142,7 +142,7 @@ applyvelocity:
     ADC y_vel+1
     STA y_pos+1
 
-    JSR bg_collision   ; X collision
+    JSR bg_collision   ; Y collision
     LDA collision
     BEQ :+
     LDA #$00
