@@ -14,21 +14,106 @@ bg_collision:       ; collides the player with the background tiles
     STA R1          ; bottom edge
 
 
-    LDA x_pos+1    ; top left corner
+    LDA x_pos+1     ; top left corner
     LSR
     LSR
     LSR
     LSR
-    STA R0
+    STA R2
     LDA y_pos+1
     AND #$0f
     CLC
-    ADC R0
+    ADC R2
     TAX
     STA tilemap,X
     BEQ :+
-    ;collision stuff goes here
+    INC collision
+    LDA x_pos+1
+    AND #$0f
+    SEC
+    SBC #$10
+    STA x_eject
+    LDA y_pos+1
+    AND #$0f
+    SEC
+    SBC #$10
+    STA y_eject
 :
-    ;code continues here
-
-    
+    LDA R0          ; top right corner
+    LSR
+    LSR
+    LSR
+    LSR
+    STA R2
+    LDA y_pos+1
+    AND #$0f
+    CLC
+    ADC R2
+    TAX
+    STA tilemap,X
+    BEQ :+
+    INC collision
+    LDA R0
+    AND #$0f
+    CLC
+    ADC #$01
+    STA x_eject
+    LDA y_pos+1
+    AND #$0f
+    SEC
+    SBC #$10
+    STA y_eject
+:
+    LDA x_pos+1     ; bottom left corner
+    LSR
+    LSR
+    LSR
+    LSR
+    STA R2
+    LDA R1
+    AND #$0f
+    CLC
+    ADC R2
+    TAX
+    STA tilemap,X
+    BEQ :+
+    INC collision
+    INC on_ground
+    LDA x_pos+1
+    AND #$0f
+    SEC
+    SBC #$10
+    STA x_eject
+    LDA R1
+    AND #$0f
+    CLC
+    ADC #$01
+    STA y_eject
+:
+    LDA R0          ; bottom right corner
+    LSR
+    LSR
+    LSR
+    LSR
+    STA R2
+    LDA R1
+    AND #$0f
+    CLC
+    ADC R2
+    TAX
+    STA tilemap,X
+    BEQ :+
+    INC collision
+    INC on_ground
+    LDA R0
+    AND #$0f
+    CLC
+    ADC #$01
+    STA x_eject
+    LDA R1
+    AND #$0f
+    CLC
+    ADC #$01
+    STA y_eject
+:
+    RTS

@@ -3,6 +3,18 @@
     R1:            .res 1
     R2:            .res 1
     R3:            .res 1
+    R4:            .res 1
+    R5:            .res 1
+    R6:            .res 1
+    R7:            .res 1
+    R8:            .res 1
+    R9:            .res 1
+    R10:            .res 1
+    R11:            .res 1
+    R12:            .res 1
+    R13:            .res 1
+    R14:            .res 1
+    R15:            .res 1
     vram_index:    .res 1     ; Current index of the VRAM buffer
     frame_counter: .res 1     ; General purpose frame counter
     x_scroll:      .res 2     ; X position of screen scroll (LSB: pixel position, MSB: screen number)
