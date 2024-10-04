@@ -15,13 +15,13 @@ bg_collision:       ; collides the player with the background tiles
 
 
     LDA x_pos+1     ; top left corner
-    LSR
-    LSR
-    LSR
-    LSR
+    LSR A
+    LSR A
+    LSR A
+    LSR A
     STA R2
     LDA y_pos+1
-    AND #$0f
+    AND #$f0
     CLC
     ADC R2
     TAX
@@ -40,13 +40,13 @@ bg_collision:       ; collides the player with the background tiles
     STA y_eject
 :
     LDA R0          ; top right corner
-    LSR
-    LSR
-    LSR
-    LSR
+    LSR A
+    LSR A
+    LSR A
+    LSR A
     STA R2
     LDA y_pos+1
-    AND #$0f
+    AND #$f0
     CLC
     ADC R2
     TAX
@@ -65,13 +65,13 @@ bg_collision:       ; collides the player with the background tiles
     STA y_eject
 :
     LDA x_pos+1     ; bottom left corner
-    LSR
-    LSR
-    LSR
-    LSR
+    LSR A
+    LSR A
+    LSR A
+    LSR A
     STA R2
     LDA R1
-    AND #$0f
+    AND #$f0
     CLC
     ADC R2
     TAX
@@ -91,13 +91,13 @@ bg_collision:       ; collides the player with the background tiles
     STA y_eject
 :
     LDA R0          ; bottom right corner
-    LSR
-    LSR
-    LSR
-    LSR
+    LSR A
+    LSR A
+    LSR A
+    LSR A
     STA R2
     LDA R1
-    AND #$0f
+    AND #$f0
     CLC
     ADC R2
     TAX
