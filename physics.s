@@ -1,26 +1,30 @@
-bg_collision:       ; collides the player with the background tiles
+.proc bg_collision  ; collides the player with the background tiles
+left    := x_pos+1
+right   := R0
+top     := y_pos+1
+bottom  := R1
     LDA #$00
     STA x_eject
     STA y_eject
     STA collision
     STA on_ground
-    LDA x_pos+1
+    LDA left
     CLC
     ADC #PLAYERWIDTH-1
-    STA R0          ; right edge
-    LDA y_pos+1
+    STA right       ; right edge
+    LDA top
     CLC
     ADC #PLAYERHEIGHT-1
-    STA R1          ; bottom edge
+    STA bottom      ; bottom edge
 
 
-    LDA x_pos+1     ; top left corner
+    LDA left        ; top left corner
     LSR A
     LSR A
     LSR A
     LSR A
     STA R2
-    LDA y_pos+1
+    LDA top
     AND #$f0
     CLC
     ADC R2
@@ -28,24 +32,24 @@ bg_collision:       ; collides the player with the background tiles
     LDA tilemap,X
     BEQ :+
     INC collision
-    LDA x_pos+1
+    LDA left
     AND #$0f
     SEC
     SBC #$10
     STA x_eject
-    LDA y_pos+1
+    LDA top
     AND #$0f
     SEC
     SBC #$10
     STA y_eject
 :
-    LDA R0          ; top right corner
+    LDA right       ; top right corner
     LSR A
     LSR A
     LSR A
     LSR A
     STA R2
-    LDA y_pos+1
+    LDA top
     AND #$f0
     CLC
     ADC R2
@@ -53,24 +57,24 @@ bg_collision:       ; collides the player with the background tiles
     LDA tilemap,X
     BEQ :+
     INC collision
-    LDA R0
+    LDA right
     AND #$0f
     CLC
     ADC #$01
     STA x_eject
-    LDA y_pos+1
+    LDA top
     AND #$0f
     SEC
     SBC #$10
     STA y_eject
 :
-    LDA x_pos+1     ; bottom left corner
+    LDA left        ; bottom left corner
     LSR A
     LSR A
     LSR A
     LSR A
     STA R2
-    LDA R1
+    LDA bottom
     AND #$f0
     CLC
     ADC R2
@@ -79,24 +83,24 @@ bg_collision:       ; collides the player with the background tiles
     BEQ :+
     INC collision
     INC on_ground
-    LDA x_pos+1
+    LDA left
     AND #$0f
     SEC
     SBC #$10
     STA x_eject
-    LDA R1
+    LDA bottom
     AND #$0f
     CLC
     ADC #$01
     STA y_eject
 :
-    LDA R0          ; bottom right corner
+    LDA right       ; bottom right corner
     LSR A
     LSR A
     LSR A
     LSR A
     STA R2
-    LDA R1
+    LDA bottom
     AND #$f0
     CLC
     ADC R2
@@ -105,15 +109,16 @@ bg_collision:       ; collides the player with the background tiles
     BEQ :+
     INC collision
     INC on_ground
-    LDA R0
+    LDA right
     AND #$0f
     CLC
     ADC #$01
     STA x_eject
-    LDA R1
+    LDA bottom
     AND #$0f
     CLC
     ADC #$01
     STA y_eject
 :
     RTS
+.endproc
