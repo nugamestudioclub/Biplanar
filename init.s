@@ -159,7 +159,7 @@ initppu:
     STA $0300
 
     CLI                 ; clear interrups so NMI can be called
-    LDA #%10010000      
+    LDA #%10110000      
     STA PPUCTRL         ; the left most bit of $2000 sets wheteher NMI is enabled or not
 
     LDA #%00011110      ; enable background and sprites

@@ -196,7 +196,7 @@ applyvelocity:
     STA R1
     LDA y_pos+1
     STA R2
-    LDA #%10000000
+    LDA #%00000000
     STA R3
     JSR oamsprite
 
