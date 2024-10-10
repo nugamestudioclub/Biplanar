@@ -109,3 +109,11 @@ initgame:
     LDA #$80        ; init player position
     STA x_pos+1
     STA y_pos+1
+
+    LDX #$E0        ; init collision map (temporary until we have level loading)
+    LDA #$01
+:
+    STA tilemap,x
+    INX
+    CPX #$F0
+    BNE :-
