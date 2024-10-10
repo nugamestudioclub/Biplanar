@@ -107,6 +107,54 @@ initppu:
     CPX #$40
     BNE :-
 
+    LDA #$22    ; Platform 1
+    STA PPUADDR
+    LDA #$84
+    STA PPUADDR
+    LDX #$00
+    LDA #$47
+:
+    STA PPUDATA
+    INX
+    CPX #$06
+    BNE :-
+
+    LDA #$22
+    STA PPUADDR
+    LDA #$A4
+    STA PPUADDR
+    LDX #$00
+    LDA #$47
+:
+    STA PPUDATA
+    INX
+    CPX #$06
+    BNE :-
+
+    LDA #$21    ; Platform 2
+    STA PPUADDR
+    LDA #$94
+    STA PPUADDR
+    LDX #$00
+    LDA #$47
+:
+    STA PPUDATA
+    INX
+    CPX #$06
+    BNE :-
+
+    LDA #$21
+    STA PPUADDR
+    LDA #$B4
+    STA PPUADDR
+    LDX #$00
+    LDA #$47
+:
+    STA PPUDATA
+    INX
+    CPX #$06
+    BNE :-
+
     LDA #$FF      ; init VRAM buffer
     STA $0300
 
@@ -128,4 +176,20 @@ initgame:
     STA tilemap,x
     INX
     CPX #$F0
+    BNE :-
+
+    LDX #$A2        ; Platform 1
+    LDA #$01
+:
+    STA tilemap,x
+    INX
+    CPX #$A5
+    BNE :-
+
+    LDX #$6A        ; Platform 2
+    LDA #$01
+:
+    STA tilemap,x
+    INX
+    CPX #$6D
     BNE :-
