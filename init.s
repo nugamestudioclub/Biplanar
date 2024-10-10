@@ -95,6 +95,18 @@ initppu:
     STA OAMDMA
     NOP
 
+    LDA #$23    ; make floor (temporary until we have level loading)
+    STA PPUADDR
+    LDA #$80
+    STA PPUADDR
+    LDX #$00
+    LDA #$47
+:
+    STA PPUDATA
+    INX
+    CPX #$40
+    BNE :-
+
     LDA #$FF      ; init VRAM buffer
     STA $0300
 
