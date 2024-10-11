@@ -43,3 +43,6 @@ IRQHIGH   = $0F     ; HHHH HHHH -> IRQ counter high byte
 
 PLAYERWIDTH = $08
 PLAYERHEIGHT = $10
+
+MOVEACCEL = $40     ; the acceleration applied by movement each frame in subpixels
+MOVEDRAG = $40      ; the decelleration applied by drag each frame in subpixels

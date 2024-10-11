@@ -136,7 +136,7 @@ applydrag:
     BMI @negative
     BNE :+             ; positive velocity drag
     LDA x_vel+0
-    CMP #$80
+    CMP #MOVEDRAG
     BCS :+
     LDA #$00
     STA x_vel+0
@@ -144,7 +144,7 @@ applydrag:
 :
     SEC
     LDA x_vel+0
-    SBC #$80
+    SBC #MOVEDRAG
     STA x_vel+0
     LDA x_vel+1
     SBC #$00
@@ -154,7 +154,7 @@ applydrag:
     CMP #$FF
     BNE :+
     LDA x_vel+0
-    CMP #81
+    CMP #MOVEDRAG+1
     BCC :+
     LDA #$00
     STA x_vel+0
@@ -162,7 +162,7 @@ applydrag:
 :
     CLC
     LDA x_vel+0
-    ADC #$80
+    ADC #MOVEDRAG
     STA x_vel+0
     LDA x_vel+1
     ADC #$00

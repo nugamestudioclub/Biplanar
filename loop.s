@@ -22,7 +22,7 @@ mainloop:              ; the main game tick loop
     STA player_dir
     CLC                ; increase the X velocity by an acceleration amount of 0.25
     LDA x_vel+0
-    ADC #$40
+    ADC #MOVEACCEL
     STA x_vel+0
     LDA x_vel+1
     ADC #$00
@@ -43,7 +43,7 @@ mainloop:              ; the main game tick loop
     STA player_dir
     SEC                ; decrease the X velocity by an acceleration amount of 0.25
     LDA x_vel+0
-    SBC #$40
+    SBC #MOVEACCEL
     STA x_vel+0
     LDA x_vel+1
     SBC #$00
