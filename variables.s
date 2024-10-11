@@ -21,6 +21,7 @@
     y_scroll:      .res 2     ; Y position of screen scroll (LSB: pixel position, MSB: screen number)
     oam_index:     .res 1     ; Current index of the OAM buffer
     controller:    .res 1     ; Controller input
+    player_dir:    .res 1     ; Facing direction of the player
     x_pos:         .res 2     ; X position of the player (LSB: subpixel position, MSB: pixel position)
     y_pos:         .res 2     ; Y position of the player (LSB: subpixel position, MSB: pixel position)
     x_vel:         .res 2     ; X velocity of the player (LSB: subpixel velocity, MSB: pixel velocity)

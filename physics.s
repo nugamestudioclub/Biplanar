@@ -122,3 +122,47 @@ bottom  := R1
 :
     RTS
 .endproc
+
+applydrag:
+    LDA x_vel+0
+    BNE :+
+    LDA x_vel+1
+    BNE :+
+    RTS
+:
+    LDA x_vel+1
+    BMI @negative
+    BNE :+             ; positive velocity drag
+    LDA x_vel+0
+    CMP #$80
+    BCS :+
+    LDA #$00
+    STA x_vel+0
+    RTS
+:
+    SEC
+    LDA x_vel+0
+    SBC #$80
+    STA x_vel+0
+    LDA x_vel+1
+    SBC #$00
+    STA x_vel+1
+    RTS
+@negative:             ; negative velocity drag
+    CMP #$FF
+    BNE :+
+    LDA x_vel+0
+    CMP #81
+    BCC :+
+    LDA #$00
+    STA x_vel+0
+    STA x_vel+1
+:
+    CLC
+    LDA x_vel+0
+    ADC #$80
+    STA x_vel+0
+    LDA x_vel+1
+    ADC #$00
+    STA x_vel+1
+    RTS

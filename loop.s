@@ -18,6 +18,8 @@ mainloop:              ; the main game tick loop
     LDA controller     ; right button
     AND #%00000001
     BEQ @noright
+    LDA #$00
+    STA player_dir
     CLC                ; increase the X velocity by an acceleration amount of 0.25
     LDA x_vel+0
     ADC #$40
@@ -37,6 +39,8 @@ mainloop:              ; the main game tick loop
     LDA controller     ; left button
     AND #%00000010
     BEQ @noleft
+    LDA #$40
+    STA player_dir
     SEC                ; decrease the X velocity by an acceleration amount of 0.25
     LDA x_vel+0
     SBC #$40
@@ -53,47 +57,7 @@ mainloop:              ; the main game tick loop
     STA x_vel+1
     JMP gravity
 @noleft:
-    LDA x_vel+0
-    BNE applydrag
-    LDA x_vel+1
-    BNE applydrag
-    JMP gravity
-applydrag:
-    LDA x_vel+1
-    BMI @negative
-    BNE :+             ; positive velocity drag
-    LDA x_vel+0
-    CMP #$80
-    BCS :+
-    LDA #$00
-    STA x_vel+0
-    JMP gravity
-:
-    SEC
-    LDA x_vel+0
-    SBC #$80
-    STA x_vel+0
-    LDA x_vel+1
-    SBC #$00
-    STA x_vel+1
-    JMP gravity
-@negative:             ; negative velocity drag
-    CMP #$FF
-    BNE :+
-    LDA x_vel+0
-    CMP #81
-    BCC :+
-    LDA #$00
-    STA x_vel+0
-    STA x_vel+1
-:
-    CLC
-    LDA x_vel+0
-    ADC #$80
-    STA x_vel+0
-    LDA x_vel+1
-    ADC #$00
-    STA x_vel+1
+    JSR applydrag
 
 gravity:
     LDA y_vel+1
@@ -197,6 +161,7 @@ applyvelocity:
     LDA y_pos+1
     STA R2
     LDA #%00000000
+    ORA player_dir
     STA R3
     JSR oamsprite
 
