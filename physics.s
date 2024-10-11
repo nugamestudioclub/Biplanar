@@ -123,6 +123,8 @@ bottom  := R1
     RTS
 .endproc
 
+
+
 applydrag:
     LDA x_vel+0
     BNE :+

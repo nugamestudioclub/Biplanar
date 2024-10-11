@@ -84,7 +84,7 @@ loadpalettes:
 
     LDX #$00
 :
-    LDA palettedata,X
+    LDA lightpalette,X
     STA PPUDATA
     INX
     CPX #$20
