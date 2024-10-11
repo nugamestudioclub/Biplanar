@@ -154,7 +154,14 @@ applyvelocity:
 
     JSR oamclear       ; draw sprites
 
-    LDA #$00           ; player sprite
+    LDA frame_counter  ; player sprite
+    LSR
+    LSR
+    AND #%00000110
+    CMP #$06
+    BNE :+
+    LDA #$02
+:
     STA R0
     LDA x_pos+1
     STA R1
