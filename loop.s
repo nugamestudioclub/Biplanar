@@ -96,18 +96,29 @@ terminal_velocity:
 
 handlejump:
     LDA on_ground
+    ORA on_wall
     BEQ applyvelocity
     LDA controller
     AND #%10000000
     BEQ releasejump
     LDA jumping
     BNE applyvelocity
-    LDX #$00
-    STX on_ground
-    INX
-    STX jumping
+    LDA #$01
+    STA jumping
     LDA #$F9
     STA y_vel+1
+    LDA on_wall
+    BEQ applyvelocity
+    LDA #$00
+    STA x_vel+0
+    LDA player_dir
+    BEQ @left
+    LDA #$03
+    STA x_vel+1
+    JMP applyvelocity
+@left:
+    LDA #$FD
+    STA x_vel+1
     JMP applyvelocity
 releasejump:
     LDA #$00
