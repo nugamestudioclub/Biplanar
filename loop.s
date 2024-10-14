@@ -60,10 +60,18 @@ mainloop:              ; the main game tick loop
     JSR applydrag
 
 gravity:
+    LDA #$05
+    STA R0
+    LDA on_wall
+    BEQ :+
+    LDA #$02
+    STA R0
+:
+
     LDA y_vel+1
     BMI applygravity
-    CMP #$05
-    BCS :+
+    CMP R0
+    BCS terminal_velocity
 applygravity:
     CLC
     LDA controller
@@ -80,10 +88,10 @@ gravready:
     ADC #$00
     STA y_vel+1
     JMP handlejump
-:
+terminal_velocity:
     LDA #$00
     STA y_vel+0
-    LDA #$05
+    LDA R0
     STA y_vel+1
 
 handlejump:
@@ -115,9 +123,14 @@ applyvelocity:
     ADC x_vel+1
     STA x_pos+1
 
+    LDA #$00
+    STA on_wall
+
     JSR bg_collision   ; X collision
     LDA collision
     BEQ :+
+    LDA #$01
+    STA on_wall
     LDA #$00
     STA x_vel+1
     STA x_vel+0
