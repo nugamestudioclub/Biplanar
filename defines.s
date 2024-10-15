@@ -17,7 +17,16 @@ SNDCHN    = $4015   ; ---D NT21 -> Control: DMC enable, length counter enables: 
                     ; IF-D NT21 -> Status: DMC interrupt, frame interrupt, length counter status: noise, triangle, pulse 2, pulse 1 (read)
 JOY1      = $4016   ; Controller 1 Read
 JOY2      = $4017   ; Controller 2 Read
-                    ; SD-- ---- -> Frame counter: 5-frame sequence, disable frame interrupt (write) 
+                    ; SD-- ---- -> Frame counter: 5-frame sequence, disable frame interrupt (write)
+
+BUTTON_A      = 1 << 7
+BUTTON_B      = 1 << 6
+BUTTON_SELECT = 1 << 5
+BUTTON_START  = 1 << 4
+BUTTON_UP     = 1 << 3
+BUTTON_DOWN   = 1 << 2
+BUTTON_LEFT   = 1 << 1
+BUTTON_RIGHT  = 1 << 0
 
 MAPCMD    = $8000   ; ---- CCCC -> The mapper command number to execute
 MAPDATA   = $A000   ; PPPP PPPP -> The parameter for the mapper command
@@ -41,8 +50,15 @@ IRQCTRL   = $0D     ; C--- ---T -> IRQ counter enable (C), IRQ enable (T)
 IQRLOW    = $0E     ; LLLL LLLL -> IRQ counter low byte
 IRQHIGH   = $0F     ; HHHH HHHH -> IRQ counter high byte
 
-PLAYERWIDTH = $08
+PLAYERWIDTH  = $08
 PLAYERHEIGHT = $10
 
-MOVEACCEL = $40     ; the acceleration applied by movement each frame in subpixels
-MOVEDRAG = $40      ; the decelleration applied by drag each frame in subpixels
+WALLJUMPVEL  = $03  ; the x velocity applied when the player wall jumps in pixels
+JUMPVELOCITY = $07  ; the y velocity applied when the player jumps in pixels
+MOVEACCEL    = $40  ; the acceleration applied by movement each frame in subpixels
+MOVEDRAG     = $40  ; the deceleration applied by drag each frame in subpixels
+LOWGRAV      = $40  ; the acceleration applied by gravity each frame while holding jump in subpixels
+HIGHGRAV     = $C0  ; the acceleration applied by gravity each frame in subpixels
+FALLSPEED    = $05  ; the terminal velocity when falling in pixels
+SLIDESPEED   = $02  ; the terminal velocity when sliding down a wall in pixels
+MOVESPEED    = $04  ; the max horizontal move speed in pixels

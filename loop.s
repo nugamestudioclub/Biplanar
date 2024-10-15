@@ -16,7 +16,7 @@ mainloop:              ; the main game tick loop
 
 
     LDA controller     ; right button
-    AND #%00000001
+    AND #BUTTON_RIGHT
     BEQ @noright
     LDA #$00
     STA player_dir
@@ -28,16 +28,16 @@ mainloop:              ; the main game tick loop
     ADC #$00
     STA x_vel+1
     BMI gravity
-    CMP #$04
+    CMP #MOVESPEED
     BCC gravity
     LDA #$00
     STA x_vel+0
-    LDA #$04
+    LDA #MOVESPEED
     STA x_vel+1
     JMP gravity
 @noright:
     LDA controller     ; left button
-    AND #%00000010
+    AND #BUTTON_LEFT
     BEQ @noleft
     LDA #$40
     STA player_dir
@@ -49,22 +49,22 @@ mainloop:              ; the main game tick loop
     SBC #$00
     STA x_vel+1
     BPL gravity
-    CMP #$FD
+    CMP #(MOVESPEED ^ $FF)+2
     BCS gravity
     LDA #$00
     STA x_vel+0
-    LDA #$FC
+    LDA #(MOVESPEED ^ $FF)+1
     STA x_vel+1
     JMP gravity
 @noleft:
     JSR applydrag
 
 gravity:
-    LDA #$05
+    LDA #FALLSPEED
     STA R0
     LDA on_wall
     BEQ :+
-    LDA #$02
+    LDA #SLIDESPEED
     STA R0
 :
 
@@ -73,15 +73,15 @@ gravity:
     CMP R0
     BCS terminal_velocity
 applygravity:
-    CLC
     LDA controller
-    AND #%10000000
+    AND #BUTTON_A
     BNE lowgrav
-    LDA #$C0
+    LDA #HIGHGRAV
     JMP gravready
 lowgrav:
-    LDA #$40
+    LDA #LOWGRAV
 gravready:
+    CLC
     ADC y_vel+0
     STA y_vel+0
     LDA y_vel+1
@@ -99,13 +99,15 @@ handlejump:
     ORA on_wall
     BEQ applyvelocity
     LDA controller
-    AND #%10000000
+    AND #BUTTON_A
     BEQ releasejump
     LDA jumping
     BNE applyvelocity
     LDA #$01
     STA jumping
-    LDA #$F9
+    LDA #$00
+    STA y_vel+0
+    LDA #(JUMPVELOCITY ^ $FF)+1
     STA y_vel+1
     LDA on_wall
     BEQ applyvelocity
@@ -113,11 +115,11 @@ handlejump:
     STA x_vel+0
     LDA player_dir
     BEQ @left
-    LDA #$03
+    LDA #WALLJUMPVEL
     STA x_vel+1
     JMP applyvelocity
 @left:
-    LDA #$FD
+    LDA #(WALLJUMPVEL ^ $FF)+1
     STA x_vel+1
     JMP applyvelocity
 releasejump:
