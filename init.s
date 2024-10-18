@@ -95,6 +95,7 @@ initppu:
     STA OAMDMA
     NOP
 
+.if 0
     LDA #$23    ; make floor (temporary until we have level loading)
     STA PPUADDR
     LDA #$80
@@ -154,6 +155,10 @@ initppu:
     INX
     CPX #$06
     BNE :-
+.endif
+
+firstscreen:
+    
 
     LDA #$FF      ; init VRAM buffer
     STA $0300
@@ -171,7 +176,7 @@ initgame:
     STA y_pos+1
 
     LDX #$E0        ; init collision map (temporary until we have level loading)
-    LDA #$01
+    LDA #$80
 :
     STA tilemap,x
     INX
@@ -179,7 +184,7 @@ initgame:
     BNE :-
 
     LDX #$A2        ; Platform 1
-    LDA #$01
+    LDA #$80
 :
     STA tilemap,x
     INX
@@ -187,7 +192,7 @@ initgame:
     BNE :-
 
     LDX #$6A        ; Platform 2
-    LDA #$01
+    LDA #$80
 :
     STA tilemap,x
     INX

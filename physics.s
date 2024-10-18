@@ -30,7 +30,7 @@ bottom  := R1
     ADC R2
     TAX
     LDA tilemap,X
-    BEQ :+
+    BPL :+
     INC collision
     LDA left
     AND #$0f
@@ -55,7 +55,7 @@ bottom  := R1
     ADC R2
     TAX
     LDA tilemap,X
-    BEQ :+
+    BPL :+
     INC collision
     LDA right
     AND #$0f
@@ -80,7 +80,7 @@ bottom  := R1
     ADC R2
     TAX
     LDA tilemap,X
-    BEQ :+
+    BPL :+
     INC collision
     INC on_ground
     LDA left
@@ -106,7 +106,7 @@ bottom  := R1
     ADC R2
     TAX
     LDA tilemap,X
-    BEQ :+
+    BPL :+
     INC collision
     INC on_ground
     LDA right
