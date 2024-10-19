@@ -156,9 +156,22 @@ initppu:
     CPX #$06
     BNE :-
 .endif
-
+.if 1
 firstscreen:
-    
+    LDA #$20
+    STA PPUADDR
+    LDA #$00
+    STA PPUADDR
+    TAX
+:
+    LDY levelmap,X
+    LDA metatiles,Y
+    STA PPUDATA
+    LDA metatiles+2,Y
+    STA PPUDATA
+    INX
+    BNE :-
+.endif
 
     LDA #$FF      ; init VRAM buffer
     STA $0300
