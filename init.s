@@ -95,7 +95,7 @@ initppu:
     STA OAMDMA
     NOP
 
-.if 0
+.if 1
     LDA #$23    ; make floor (temporary until we have level loading)
     STA PPUADDR
     LDA #$80
@@ -156,21 +156,32 @@ initppu:
     CPX #$06
     BNE :-
 .endif
-.if 1
+.if 0
 firstscreen:
     LDA #$20
     STA PPUADDR
     LDA #$00
     STA PPUADDR
     TAX
-:
+@loadloop:
     LDY levelmap,X
+    LDA R0
+    BNE @bottomhalf
     LDA metatiles,Y
     STA PPUDATA
     LDA metatiles+2,Y
     STA PPUDATA
+    JMP @continue
+@bottomhalf:
+    LDA metatiles,Y
+    STA PPUDATA
+    LDA metatiles+2,Y
+    STA PPUDATA
+@continue:
     INX
-    BNE :-
+    BNE @loadloop
+
+
 .endif
 
     LDA #$FF      ; init VRAM buffer

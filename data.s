@@ -5,9 +5,11 @@ darkpalette:
     .byte $06, $10, $00, $0f, $06, $10, $00, $0f, $06, $10, $00, $0f, $06, $10, $00, $0f
     .byte $06, $20, $21, $38, $06, $10, $00, $0f, $06, $10, $00, $0f, $06, $10, $00, $0f
 
-metatiles:
-    .byte $00, $45, $00, $45
-    .byte $00, $47, $00, $47
+metatiles:               ; metatile palette
+    .byte $00, $45       ; top left corner
+    .byte $00, $45       ; top right corner
+    .byte $00, $47       ; bottom left corner
+    .byte $00, $47       ; bottom right corner
 
 levelmap:
     .byte $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00
