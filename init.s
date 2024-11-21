@@ -95,7 +95,7 @@ initppu:
     STA OAMDMA
     NOP
 
-.if 1
+.if 0
     LDA #$23    ; make floor (temporary until we have level loading)
     STA PPUADDR
     LDA #$80
@@ -156,12 +156,13 @@ initppu:
     CPX #$06
     BNE :-
 .endif
-.if 0
+.if 1
 firstscreen:
     LDA #$20
     STA PPUADDR
     LDA #$00
     STA PPUADDR
+    STA R0
     TAX
 @loadloop:
     LDY levelmap,X
@@ -173,12 +174,27 @@ firstscreen:
     STA PPUDATA
     JMP @continue
 @bottomhalf:
-    LDA metatiles,Y
+    LDA metatiles+4,Y
     STA PPUDATA
-    LDA metatiles+2,Y
+    LDA metatiles+6,Y
     STA PPUDATA
 @continue:
     INX
+    TXA
+    AND #$0F
+    BNE @next
+    LDA R0
+    EOR #$01
+    STA R0
+    BEQ @next
+    TXA
+    SEC
+    SBC #$10
+    TAX
+@next:
+    LDA R0
+    BNE @loadloop
+    TXA
     BNE @loadloop
 
 
