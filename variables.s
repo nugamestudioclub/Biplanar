@@ -36,4 +36,5 @@
 
 .segment "RAM"                ; The rest of internal RAM after ZP, the OAM buffer, and the VRAM buffer
     tilemap:       .res 240   ; A map that stores which tiles are solid
+    tilemap2:      .res 240
 .segment "PRG_RAM"            ; Extra cartridge RAM
