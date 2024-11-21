@@ -95,68 +95,6 @@ initppu:
     STA OAMDMA
     NOP
 
-.if 0
-    LDA #$23    ; make floor (temporary until we have level loading)
-    STA PPUADDR
-    LDA #$80
-    STA PPUADDR
-    LDX #$00
-    LDA #$47
-:
-    STA PPUDATA
-    INX
-    CPX #$40
-    BNE :-
-
-    LDA #$22    ; Platform 1
-    STA PPUADDR
-    LDA #$84
-    STA PPUADDR
-    LDX #$00
-    LDA #$47
-:
-    STA PPUDATA
-    INX
-    CPX #$06
-    BNE :-
-
-    LDA #$22
-    STA PPUADDR
-    LDA #$A4
-    STA PPUADDR
-    LDX #$00
-    LDA #$47
-:
-    STA PPUDATA
-    INX
-    CPX #$06
-    BNE :-
-
-    LDA #$21    ; Platform 2
-    STA PPUADDR
-    LDA #$94
-    STA PPUADDR
-    LDX #$00
-    LDA #$47
-:
-    STA PPUDATA
-    INX
-    CPX #$06
-    BNE :-
-
-    LDA #$21
-    STA PPUADDR
-    LDA #$B4
-    STA PPUADDR
-    LDX #$00
-    LDA #$47
-:
-    STA PPUDATA
-    INX
-    CPX #$06
-    BNE :-
-.endif
-.if 1
 firstscreen:
     LDA #$20
     STA PPUADDR
@@ -165,18 +103,20 @@ firstscreen:
     STA R0
     TAX
 @loadloop:
-    LDY levelmap,X
+    LDY metamap,X
+    LDA meta_col,Y
+    STA tilemap,X
     LDA R0
     BNE @bottomhalf
-    LDA metatiles,Y
+    LDA meta_ul,Y
     STA PPUDATA
-    LDA metatiles+2,Y
+    LDA meta_ur,Y
     STA PPUDATA
     JMP @continue
 @bottomhalf:
-    LDA metatiles+4,Y
+    LDA meta_dl,Y
     STA PPUDATA
-    LDA metatiles+6,Y
+    LDA meta_dr,Y
     STA PPUDATA
 @continue:
     INX
@@ -198,7 +138,6 @@ firstscreen:
     BNE @loadloop
 
 
-.endif
 
     LDA #$FF      ; init VRAM buffer
     STA $0300
@@ -214,27 +153,3 @@ initgame:
     LDA #$80        ; init player position
     STA x_pos+1
     STA y_pos+1
-
-    LDX #$E0        ; init collision map (temporary until we have level loading)
-    LDA #$80
-:
-    STA tilemap,x
-    INX
-    CPX #$F0
-    BNE :-
-
-    LDX #$A2        ; Platform 1
-    LDA #$80
-:
-    STA tilemap,x
-    INX
-    CPX #$A5
-    BNE :-
-
-    LDX #$6A        ; Platform 2
-    LDA #$80
-:
-    STA tilemap,x
-    INX
-    CPX #$6D
-    BNE :-

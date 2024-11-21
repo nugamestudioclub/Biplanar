@@ -5,13 +5,19 @@ darkpalette:
     .byte $06, $10, $00, $0f, $06, $10, $00, $0f, $06, $10, $00, $0f, $06, $10, $00, $0f
     .byte $06, $20, $21, $38, $06, $10, $00, $0f, $06, $10, $00, $0f, $06, $10, $00, $0f
 
-metatiles:               ; metatile palette
-    .byte $00, $45       ; top left corner
-    .byte $00, $45       ; top right corner
-    .byte $00, $47       ; bottom left corner
-    .byte $00, $47       ; bottom right corner
+; metatile palette
+meta_ul:            ; top left corner
+    .byte $00, $45
+meta_ur:            ; top right corner
+    .byte $00, $45
+meta_dl:            ; bottom left corner
+    .byte $00, $47
+meta_dr:            ; bottom right corner
+    .byte $00, $47
+meta_col:           ; collision type
+    .byte $00, $80
 
-levelmap:
+metamap:
     .byte $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00
     .byte $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00
     .byte $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00
