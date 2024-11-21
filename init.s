@@ -103,7 +103,7 @@ firstscreen:
     STA R0
     TAX
 @loadloop:
-    LDY metamap,X
+    LDY meta_map,X
     LDA meta_col,Y
     STA tilemap,X
     LDA R0
