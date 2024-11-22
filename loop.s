@@ -177,7 +177,35 @@ applyvelocity:
 :
 
 
+    LDX #<VRAMBUF      ; dimension switch
+    LDY #>VRAMBUF
+    LDA controller
+    AND #BUTTON_B
+    BEQ releaseswap
+    LDA swap_held
+    BNE @setbuffer
+    LDA #$01
+    STA swap_held
+    LDA dimension
+    EOR #$01
+    STA dimension
+    BNE @darkworld
+@lightworld:
+    LDX #<lightupdate
+    LDY #>lightupdate
+    BNE @setbuffer
+@darkworld:
+    LDX #<darkupdate
+    LDY #>darkupdate
+@setbuffer:
+    STX vram_pointer+0
+    STY vram_pointer+1
+    JMP drawplayer
 
+releaseswap:
+    STA swap_held
+
+drawplayer:
     JSR oamclear       ; draw sprites
 
     LDA frame_counter  ; player sprite

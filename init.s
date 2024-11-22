@@ -94,6 +94,10 @@ initppu:
     LDA #$02            ; OAM DMA
     STA OAMDMA
     NOP
+    LDA #<VRAMBUF
+    STA vram_pointer+0
+    LDA #>VRAMBUF
+    STA vram_pointer+1
 
 firstscreen:
     LDA #$20
@@ -185,7 +189,8 @@ secondscreen:
     STA $0300
 
     CLI                 ; clear interrups so NMI can be called
-    LDA #%10110000      
+    LDA #%10110000
+    STA ppu_ctrl
     STA PPUCTRL         ; the left most bit of $2000 sets wheteher NMI is enabled or not
 
     LDA #%00011110      ; enable background and sprites
