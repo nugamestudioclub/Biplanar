@@ -12,8 +12,11 @@ setscroll:
     LDX #$00
 vrambuffer:
     LDA VRAMBUF,X
+    INX
     CMP #$FF        ; End of VRAM buffer
     BEQ vrambufferdone
+    CMP #$40
+    BCS @sequential
     STA PPUADDR
     INX
     LDA VRAMBUF,X
@@ -22,6 +25,34 @@ vrambuffer:
     LDA VRAMBUF,X
     STA PPUDATA
     INX
+    JMP vrambuffer
+@sequential:
+    TAY
+    LDA PPUCTRL
+    CPY #$80
+    BCC @horizontal
+@vertical:
+    ORA #$04
+    BNE @updateseq
+@horizontal:
+    AND #$FB
+@updateseq:
+    STA PPUCTRL
+    TYA
+    AND #$3F
+    STA PPUADDR
+    LDA VRAMBUF,X
+    STA PPUADDR
+    INX
+    LDA VRAMBUF,X
+    INX
+    TAY
+@updateloop:
+    LDA (NAME_UPD_ADR),X
+	INX
+	STA PPU_DATA
+	DEY
+	BNE @updateloop
     JMP vrambuffer
 
 vrambufferdone:
