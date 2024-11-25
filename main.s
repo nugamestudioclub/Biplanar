@@ -17,4 +17,4 @@
     .word  RESET
     .word  0
 .segment "CHARS"
-    .incbin "mario.chr"
+    .incbin "game.chr"

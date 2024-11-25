@@ -15,8 +15,7 @@ writevram:          ; adds a write to the vram buffer (A: VRAM address MSB, X: V
     LDY vram_index
     STA VRAMBUF,Y
     INY
-    TXA
-    STA VRAMBUF,Y
+    STX VRAMBUF,Y
     INY
     LDA R0
     STA VRAMBUF,Y
@@ -25,6 +24,8 @@ writevram:          ; adds a write to the vram buffer (A: VRAM address MSB, X: V
     LDA #$FF
     STA VRAMBUF,Y
     RTS
+
+drawscreen:         ; draws a full screen of metatiles 
 
 oamsprite:          ; adds a sprite to OAM (R0: Tile Index, R1: X Position, R2: Y Position, R3: Attribute Byte)
     LDY R2

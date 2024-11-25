@@ -138,7 +138,7 @@ firstscreen:
 @next:
     LDA R0
     BNE @loadloop
-    TXA
+    CPX #$F0
     BNE @loadloop
 
 secondscreen:
@@ -180,7 +180,7 @@ secondscreen:
 @next:
     LDA R0
     BNE @loadloop
-    TXA
+    CPX #$F0
     BNE @loadloop
 
 
