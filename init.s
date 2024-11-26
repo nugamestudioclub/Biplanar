@@ -99,89 +99,20 @@ initppu:
     LDA #>VRAMBUF
     STA vram_pointer+1
 
-firstscreen:
-    LDA #$20
-    STA PPUADDR
+    LDA #<meta_map
+    STA R0
+    LDA #>meta_map
+    STA R1
     LDA #$00
-    STA PPUADDR
-    STA R0
-    TAX
-@loadloop:
-    LDY meta_map,X
-    LDA meta_col,Y
-    STA tilemap,X
-    LDA R0
-    BNE @bottomhalf
-    LDA meta_ul,Y
-    STA PPUDATA
-    LDA meta_ur,Y
-    STA PPUDATA
-    JMP @continue
-@bottomhalf:
-    LDA meta_dl,Y
-    STA PPUDATA
-    LDA meta_dr,Y
-    STA PPUDATA
-@continue:
-    INX
-    TXA
-    AND #$0F
-    BNE @next
-    LDA R0
-    EOR #$01
-    STA R0
-    BEQ @next
-    TXA
-    SEC
-    SBC #$10
-    TAX
-@next:
-    LDA R0
-    BNE @loadloop
-    CPX #$F0
-    BNE @loadloop
+    JSR drawscreen
 
-secondscreen:
-    LDA #$24
-    STA PPUADDR
-    LDA #$00
-    STA PPUADDR
+    LDA #<meta_map2
     STA R0
-    TAX
-@loadloop:
-    LDY meta_map2,X
-    LDA meta_col,Y
-    STA tilemap2,X
-    LDA R0
-    BNE @bottomhalf
-    LDA meta_ul,Y
-    STA PPUDATA
-    LDA meta_ur,Y
-    STA PPUDATA
-    JMP @continue
-@bottomhalf:
-    LDA meta_dl,Y
-    STA PPUDATA
-    LDA meta_dr,Y
-    STA PPUDATA
-@continue:
-    INX
-    TXA
-    AND #$0F
-    BNE @next
-    LDA R0
-    EOR #$01
-    STA R0
-    BEQ @next
-    TXA
-    SEC
-    SBC #$10
-    TAX
-@next:
-    LDA R0
-    BNE @loadloop
-    CPX #$F0
-    BNE @loadloop
+    LDA #>meta_map2
+    STA R1
+    LDA #$01
+    JSR drawscreen
+
 
 
 
