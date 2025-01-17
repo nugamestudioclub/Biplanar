@@ -191,10 +191,34 @@ applyvelocity:
     STA dimension
     BNE @darkworld
 @lightworld:
+    ; hardcoded dimensional collision changes
+    LDA #$80
+    STA tilemap+106
+    STA tilemap+107
+    STA tilemap+108
+    LDA #$00
+    STA tilemap+162
+    STA tilemap+163
+    STA tilemap+164
+    STA tilemap+50
+    STA tilemap+51
+    STA tilemap+52
     LDX #<lightupdate
     LDY #>lightupdate
     BNE @setbuffer
 @darkworld:
+    ; hardcoded dimensional collision changes
+    LDA #$80
+    STA tilemap+162
+    STA tilemap+163
+    STA tilemap+164
+    STA tilemap+50
+    STA tilemap+51
+    STA tilemap+52
+    LDA #$00
+    STA tilemap+106
+    STA tilemap+107
+    STA tilemap+108
     LDX #<darkupdate
     LDY #>darkupdate
 @setbuffer:
