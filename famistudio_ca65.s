@@ -82,9 +82,9 @@
 ; like the example below.
 ;======================================================================================================================
 
-.define FAMISTUDIO_CA65_ZP_SEGMENT   ZP
-.define FAMISTUDIO_CA65_RAM_SEGMENT  RAM
-.define FAMISTUDIO_CA65_CODE_SEGMENT PRG
+.define FAMISTUDIO_CA65_ZP_SEGMENT   ZEROPAGE
+.define FAMISTUDIO_CA65_RAM_SEGMENT  PRG_RAM0
+.define FAMISTUDIO_CA65_CODE_SEGMENT FIXED
 
 ;======================================================================================================================
 ; 2) AUDIO EXPANSION CONFIGURATION
@@ -1017,13 +1017,13 @@ famistudio_sfx_buffer = famistudio_sfx_base_addr + 4
 
 .segment .string(FAMISTUDIO_CA65_ZP_SEGMENT) : zeropage
 
-famistudio_r0:   .res 1
-famistudio_r1:   .res 1
-famistudio_r2:   .res 1
-famistudio_r3:   .res 1
+famistudio_r0 = R0
+famistudio_r1 = R1
+famistudio_r2 = R2
+famistudio_r3 = R3
 
-famistudio_ptr0: .res 2
-famistudio_ptr1: .res 2
+famistudio_ptr0 = R4
+famistudio_ptr1 = R6
 .if FAMISTUDIO_EXP_EPSM || FAMISTUDIO_EXP_FDS || FAMISTUDIO_EXP_S5B
 famistudio_ptr2: .res 2
 .endif

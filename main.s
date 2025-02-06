@@ -1,6 +1,7 @@
 .include "defines.s"
 .include "romheader.s"
 .include "variables.s"
+.include "famistudio_ca65.s"
 
 .segment "FIXED"
 
