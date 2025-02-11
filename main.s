@@ -1,6 +1,7 @@
 .include "defines.s"
 .include "romheader.s"
 .include "variables.s"
+.include "famistudio_ca65.s"
 
 .segment "FIXED"
 
@@ -11,6 +12,7 @@
 .include "ppulib.s"
 .include "physics.s"
 .include "data.s"
+.include "world1_light_test.s"
 
 .segment "VECTORS"
     .word  NMI

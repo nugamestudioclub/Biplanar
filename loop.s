@@ -1,6 +1,28 @@
 mainloop:              ; the main game tick loop
     JSR nmiwait        ; wait until next frame
 
+    LDA #BNKPRG0
+    STA MAPCMD
+    LDA #%11000001
+    STA MAPDATA
+    JSR famistudio_update
+
+    LDA dimension
+    EOR #$01
+    STA dimension
+
+    LDA #BNKPRG0
+    STA MAPCMD
+    LDA #%11000000
+    STA MAPDATA
+    JSR famistudio_update
+
+    LDA dimension
+    EOR #$01
+    STA dimension
+
+    LDA #$00
+    STA swapped
 
     LDA #$01        ; read controller
     STA JOY1
@@ -198,6 +220,7 @@ player_collision:
     BNE @setbuffer
     LDA #$01
     STA swap_held
+    STA swapped
     LDA dimension
     EOR #$01
     STA dimension

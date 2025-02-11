@@ -7,7 +7,7 @@
     .byte %01001000     ; mapper and NES 2.0 Signature
     .byte $0
     .byte $0
-    .byte $70
+    .byte $80
     .byte $0
     .byte $0
     .byte $0

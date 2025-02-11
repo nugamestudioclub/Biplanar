@@ -25,6 +25,7 @@
     controller:    .res 1     ; Controller input
     player_dir:    .res 1     ; Facing direction of the player (0: right, 1: left)
     dimension:     .res 1     ; The current dimension of the player (0: light world, 1: dark world)
+    swapped:       .res 1     ; Whether the dimension has just been swapped
     swap_held:     .res 1     ; Whether the swap dimension button was held last frame
     x_pos:         .res 2     ; X position of the player (LSB: subpixel position, MSB: pixel position)
     y_pos:         .res 2     ; Y position of the player (LSB: subpixel position, MSB: pixel position)
@@ -37,9 +38,12 @@
     on_ground:     .res 1     ; Whether the player is on the ground
     jumping:       .res 1     ; Whether the jump button was held last frame
     on_wall:       .res 1     ; Whether the player is sliding down a wall
+    player_anim:   .res 2     ; The memory location of the current player animation
+    p_anim_frame   .res 1     ; The current frame of the player's animation
 
 
 .segment "RAM"                ; The rest of internal RAM after ZP, the OAM buffer, and the VRAM buffer
     tilemap:       .res 240   ; A map that stores which tiles are solid
     tilemap2:      .res 240
-.segment "PRG_RAM"            ; Extra cartridge RAM
+.segment "PRG_RAM0"            ; Extra cartridge RAM
+.segment "PRG_RAM1"            ; Extra cartridge RAM
