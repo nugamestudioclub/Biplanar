@@ -164,6 +164,11 @@ initgame:
     STA x_pos+1
     STA y_pos+1
 
+    LDA .LOBYTE(idle_anim)
+    STA player_anim+0
+    LDA .HIBYTE(idle_anim)
+    STA player_anim+1
+
     LDA #BNKPRG0
     STA MAPCMD
     LDA #%11000000
