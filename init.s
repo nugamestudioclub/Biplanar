@@ -23,7 +23,7 @@ RESET:
 
     LDY #BNKPRG0     ; init PRG banks
     STY MAPCMD
-    LDA #%11000000
+    LDA #%11000001
     STA MAPDATA
     INY
 :
@@ -74,6 +74,22 @@ clearvram:
     INY
     CPY #$08
     BNE :-
+
+clearwram:
+    LDA #$00
+    STA $6000, x
+    INX
+    BNE clearwram
+    LDA #BNKPRG0
+    STA MAPCMD
+    LDA #%11000000
+    STA MAPDATA
+
+clearwram2:
+    LDA #$00
+    STA $6000, x
+    INX
+    BNE clearwram2
 
 loadpalettes:
     LDA PPUSTATUS   ; read PPU status to reset PPU address

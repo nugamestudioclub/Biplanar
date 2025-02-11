@@ -37,9 +37,11 @@
     on_ground:     .res 1     ; Whether the player is on the ground
     jumping:       .res 1     ; Whether the jump button was held last frame
     on_wall:       .res 1     ; Whether the player is sliding down a wall
+    snd_output:    .res 1     ; Whether to output audio from the sound engine being updated currently
 
 
 .segment "RAM"                ; The rest of internal RAM after ZP, the OAM buffer, and the VRAM buffer
     tilemap:       .res 240   ; A map that stores which tiles are solid
     tilemap2:      .res 240
-.segment "PRG_RAM"            ; Extra cartridge RAM
+.segment "PRG_RAM0"            ; Extra cartridge RAM
+.segment "PRG_RAM1"            ; Extra cartridge RAM

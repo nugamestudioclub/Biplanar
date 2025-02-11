@@ -2003,6 +2003,8 @@ famistudio_get_note_pitch_vrc6_saw:
     sbc pulse_prev ; A = signed hi-period delta.
     beq @done
     stx pulse_prev
+    ldx snd_output
+    beq @done
     tay 
     iny ; We only care about -1 ($ff) and 1. Adding one means we only check of 0 or 2, we already checked for zero (so < 3).
     cpy #$03
@@ -2120,9 +2122,11 @@ famistudio_get_note_pitch_vrc6_saw:
     .else
         jsr famistudio_get_note_pitch
     .endif
-
+    lda snd_output
+    beq :+
     lda @pitch+0
     sta reg_lo
+:
     lda @pitch+1
 
     ; HACK : VRC6 only. We are out of macro param for NESASM. TODO : Is that still true?
@@ -2145,6 +2149,8 @@ famistudio_get_note_pitch_vrc6_saw:
 
 .endif ; idx = 3
 
+    lda snd_output
+    beq @compute_volume
 .if .blank(pulse_prev) || .blank(reg_sweep) || FAMISTUDIO_CFG_SFX_SUPPORT || (!FAMISTUDIO_CFG_SMOOTH_VIBRATO)
     sta reg_hi
 .endif
@@ -2190,9 +2196,10 @@ famistudio_get_note_pitch_vrc6_saw:
 .elseif idx = 3
     ora #$f0
 .endif
-
+    lda snd_output
+    beq :+
     sta reg_vol
-
+:
 .endmacro
 
 .if FAMISTUDIO_EXP_FDS
@@ -4318,6 +4325,8 @@ famistudio_update:
 .endif
 
 .if FAMISTUDIO_USE_PHASE_RESET
+    lda snd_output
+    beq @update_sound_done
     jsr famistudio_process_phase_resets
 .endif
 
@@ -4365,6 +4374,7 @@ famistudio_update:
 
     ; Send data from the output buffer to the APU
 
+    ; APU WRITES TO FIX (if sound effects)
     lda famistudio_output_buf      ; Pulse 1 volume
     sta FAMISTUDIO_APU_PL1_VOL
     lda famistudio_output_buf+1    ; Pulse 1 period LSB
@@ -5811,6 +5821,7 @@ famistudio_advance_channel:
 @store_for_later:
     sta famistudio_dmc_delta_counter
     bpl @inc_and_return
+    ; APU WRITES TO FIX (if dmc counter)
 @set_immediately:
     and #$7f
     sta FAMISTUDIO_APU_DMC_RAW
