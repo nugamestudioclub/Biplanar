@@ -12,7 +12,7 @@
 .include "ppulib.s"
 .include "physics.s"
 .include "data.s"
-.include "world1_light_test.s"
+.include "light_and_dark_test.s"
 
 .segment "VECTORS"
     .word  NMI

@@ -285,4 +285,7 @@ drawplayer:
     STA R3
     JSR oamsprite
 
+
+    
+
     JMP mainloop

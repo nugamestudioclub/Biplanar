@@ -88,5 +88,20 @@ meta_map2:
     .byte $00, $00, $00, $00, $00, $00, $02, $00, $00, $00, $00, $00, $00, $00, $00, $00
     .byte $01, $01, $01, $01, $01, $01, $01, $01, $01, $01, $01, $01, $01, $01, $01, $01
 
+test_metasprite:
+    .byte $03 * 4 ; Number of sprites multiplied by 4 (number of times to loop)
+    .byte $00 ; Sprite 1 Tile index
+    .byte $00 ; Sprite 1 X offset
+    .byte $00 ; Sprite 1 Y offset
+    .byte $00 ; Sprite 1 Attributes
+    .byte $02 ; Sprite 2 Tile index
+    .byte $08 ; Sprite 2 X offset
+    .byte $00 ; Sprite 2 Y offset
+    .byte $00 ; Sprite 2 Attributes
+    .byte $02 ; Sprite 3 Tile index
+    .byte $00 ; Sprite 3 X offset
+    .byte $10 ; Sprite 3 Y offset
+    .byte $00 ; Sprite 3 Attributes
+
 idle_anim:
     .byte $04, $00, $02, $04, $02

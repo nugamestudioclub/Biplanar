@@ -180,5 +180,5 @@ initgame:
     STA MAPCMD
     LDA #%11000001
     STA MAPDATA
-    LDA #$00
+    LDA #$01
     JSR famistudio_music_play
