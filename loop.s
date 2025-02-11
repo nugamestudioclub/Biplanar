@@ -201,14 +201,38 @@ applyvelocity:
     LDY #>VRAMBUF
     LDA controller
     AND #BUTTON_B
-    BEQ releaseswap
+    BNE swap_pressed
+    STA swap_held
+    JMP drawplayer
+
+swap_pressed:
     LDA swap_held
     BNE @setbuffer
+
+
+    LDA #BNKPRG0
+    STA MAPCMD
+    LDA dimension
+    AND #%11000000
+    STA MAPDATA
+    LDX famistudio_pulse1_prev
+    LDY famistudio_pulse2_prev
+
     LDA #$01
     STA swap_held
     LDA dimension
     EOR #$01
     STA dimension
+
+    LDA #BNKPRG0
+    STA MAPCMD
+    LDA dimension
+    AND #%11000000
+    STA MAPDATA
+    STX famistudio_pulse1_prev
+    STY famistudio_pulse2_prev
+
+    LDA dimension
     BNE @darkworld
 @lightworld:
     ; hardcoded dimensional collision changes
@@ -244,10 +268,6 @@ applyvelocity:
 @setbuffer:
     STX vram_pointer+0
     STY vram_pointer+1
-    JMP drawplayer
-
-releaseswap:
-    STA swap_held
 
 drawplayer:
     JSR oamclear       ; draw sprites
