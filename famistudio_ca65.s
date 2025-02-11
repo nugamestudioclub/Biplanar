@@ -1023,7 +1023,7 @@ famistudio_r2 = R2
 famistudio_r3 = R3
 
 famistudio_ptr0 = R4
-famistudio_ptr1 = R6
+famistudio_ptr1 = R5
 .if FAMISTUDIO_EXP_EPSM || FAMISTUDIO_EXP_FDS || FAMISTUDIO_EXP_S5B
 famistudio_ptr2: .res 2
 .endif
