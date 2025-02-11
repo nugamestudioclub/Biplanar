@@ -23,7 +23,7 @@
     y_scroll:      .res 2     ; Y position of screen scroll (LSB: pixel position, MSB: screen number)
     oam_index:     .res 1     ; Current index of the OAM buffer
     controller:    .res 1     ; Controller input
-    player_dir:    .res 1     ; Facing direction of the player
+    player_dir:    .res 1     ; Facing direction of the player (0: right, 1: left)
     dimension:     .res 1     ; The current dimension of the player (0: light world, 1: dark world)
     swap_held:     .res 1     ; Whether the swap dimension button was held last frame
     x_pos:         .res 2     ; X position of the player (LSB: subpixel position, MSB: pixel position)

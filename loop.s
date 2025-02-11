@@ -59,6 +59,17 @@ mainloop:              ; the main game tick loop
 @noleft:
     JSR applydrag
 
+    LDA on_wall         ; If we aren't on a wall, just go to gravity.
+    BEQ gravity         ;
+
+    LDA player_dir      ; If the player is facing right...
+    BEQ wall_left
+    DEC x_vel+1         ; Increment the MSB (Pixel vel) of x_vel by 1
+    JMP gravity
+wall_left:              ; Otherwise (when the player is facing left)...
+    INC x_vel+1         ; Decrement the MSB (Pixel vel) of x_vel by 1
+
+
 gravity:
     LDA #FALLSPEED
     STA R0
@@ -136,9 +147,10 @@ applyvelocity:
     ADC x_vel+1
     STA x_pos+1
 
-    LDA #$00
+    LDA #$00            ; If 1, only set to zero if direction changed
     STA on_wall
 
+player_collision:
     JSR bg_collision   ; X collision
     LDA collision
     BEQ :+
