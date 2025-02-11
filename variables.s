@@ -25,6 +25,7 @@
     controller:    .res 1     ; Controller input
     player_dir:    .res 1     ; Facing direction of the player
     dimension:     .res 1     ; The current dimension of the player (0: light world, 1: dark world)
+    swapped:       .res 1     ; Whether the dimension has just been swapped
     swap_held:     .res 1     ; Whether the swap dimension button was held last frame
     x_pos:         .res 2     ; X position of the player (LSB: subpixel position, MSB: pixel position)
     y_pos:         .res 2     ; Y position of the player (LSB: subpixel position, MSB: pixel position)

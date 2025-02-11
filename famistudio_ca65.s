@@ -1023,7 +1023,7 @@ famistudio_r2 = R2
 famistudio_r3 = R3
 
 famistudio_ptr0 = R4
-famistudio_ptr1 = R5
+famistudio_ptr1 = R6
 .if FAMISTUDIO_EXP_EPSM || FAMISTUDIO_EXP_FDS || FAMISTUDIO_EXP_S5B
 famistudio_ptr2: .res 2
 .endif
@@ -2050,6 +2050,7 @@ famistudio_get_note_pitch_vrc6_saw:
     .local @no_noise_slide
     .local @sound_disabled
     .local @sound_disabled2
+    .local @swapped
 
     @tmp   = famistudio_r0
     @pitch = famistudio_ptr1
@@ -2144,15 +2145,17 @@ famistudio_get_note_pitch_vrc6_saw:
             .if (!.blank(reg_sweep)) && FAMISTUDIO_CFG_SMOOTH_VIBRATO
                 famistudio_smooth_vibrato @pitch, pulse_prev, reg_hi, reg_lo, reg_sweep
             .else
+                ldx swapped
+                bne @swapped
                 cmp pulse_prev
                 beq @compute_volume
+@swapped:
                 sta pulse_prev    
             .endif
         .endif
     .endif
 
 .endif ; idx = 3
-
     ldx snd_output
     beq @compute_volume
 .if .blank(pulse_prev) || .blank(reg_sweep) || FAMISTUDIO_CFG_SFX_SUPPORT || (!FAMISTUDIO_CFG_SMOOTH_VIBRATO)
