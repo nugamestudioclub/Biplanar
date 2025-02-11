@@ -75,22 +75,6 @@ clearvram:
     CPY #$08
     BNE :-
 
-clearwram:
-    LDA #$00
-    STA $6000, x
-    INX
-    BNE clearwram
-    LDA #BNKPRG0
-    STA MAPCMD
-    LDA #%11000000
-    STA MAPDATA
-
-clearwram2:
-    LDA #$00
-    STA $6000, x
-    INX
-    BNE clearwram2
-
 loadpalettes:
     LDA PPUSTATUS   ; read PPU status to reset PPU address
     LDA #$3F        ; Set PPU address to BG palette RAM ($3F00)
@@ -143,10 +127,26 @@ initppu:
     LDA #%00011110      ; enable background and sprites
     STA PPUMASK
 
+clearwram:
+    LDA #$00
+    STA $6000, x
+    INX
+    BNE clearwram
+    LDA #BNKPRG0
+    STA MAPCMD
+    LDA #%11000000
+    STA MAPDATA
+
+clearwram2:
+    LDA #$00
+    STA $6000, x
+    INX
+    BNE clearwram2
+
 initmusic:
     LDA #$01
-    LDX #.LOBYTE(music_data_test)
-    LDY #.HIBYTE(music_data_test)
+    LDX #.LOBYTE(music_data_untitled)
+    LDY #.HIBYTE(music_data_untitled)
     JSR famistudio_init
 
     LDA #BNKPRG0
@@ -155,8 +155,8 @@ initmusic:
     STA MAPDATA
 
     LDA #$01
-    LDX #.LOBYTE(music_data_test)
-    LDY #.HIBYTE(music_data_test)
+    LDX #.LOBYTE(music_data_untitled)
+    LDY #.HIBYTE(music_data_untitled)
     JSR famistudio_init
 
 initgame:
@@ -175,5 +175,5 @@ initgame:
     STA MAPCMD
     LDA #%11000001
     STA MAPDATA
-    LDA #$01
+    LDA #$00
     JSR famistudio_music_play

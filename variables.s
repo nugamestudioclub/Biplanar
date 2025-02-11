@@ -38,6 +38,7 @@
     on_ground:     .res 1     ; Whether the player is on the ground
     jumping:       .res 1     ; Whether the jump button was held last frame
     on_wall:       .res 1     ; Whether the player is sliding down a wall
+    player_anim:   .res 2     ; The memory location of the current player animation
 
 
 .segment "RAM"                ; The rest of internal RAM after ZP, the OAM buffer, and the VRAM buffer

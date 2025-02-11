@@ -179,7 +179,7 @@ FAMISTUDIO_CFG_NTSC_SUPPORT  = 1
 
 ; Must be enabled if the songs uses release notes. 
 ; More information at: https://famistudio.org/doc/pianoroll/#release-point
-; FAMISTUDIO_USE_RELEASE_NOTES = 1
+FAMISTUDIO_USE_RELEASE_NOTES = 1
 
 ; Must be enabled if any song uses the volume track. The volume track allows manipulating the volume at the track level
 ; independently from instruments.
@@ -197,7 +197,7 @@ FAMISTUDIO_CFG_NTSC_SUPPORT  = 1
 
 ; Must be enabled if any song uses slide notes. Slide notes allows portamento and slide effects.
 ; More information at: https://famistudio.org/doc/pianoroll/#slide-notes
-FAMISTUDIO_USE_SLIDE_NOTES       = 1
+; FAMISTUDIO_USE_SLIDE_NOTES       = 1
 
 ; Must be enabled if any song uses slide notes on the noise channel too. 
 ; More information at: https://famistudio.org/doc/pianoroll/#slide-notes
@@ -205,12 +205,12 @@ FAMISTUDIO_USE_SLIDE_NOTES       = 1
 
 ; Must be enabled if any song uses the vibrato speed/depth effect track. 
 ; More information at: https://famistudio.org/doc/pianoroll/#vibrato-depth-speed
-FAMISTUDIO_USE_VIBRATO           = 1
+; FAMISTUDIO_USE_VIBRATO           = 1
 
 ; Must be enabled if any song uses arpeggios (not to be confused with instrument arpeggio envelopes, those are always
 ; supported).
 ; More information at: (TODO)
-; FAMISTUDIO_USE_ARPEGGIO          = 1
+FAMISTUDIO_USE_ARPEGGIO          = 1
 
 ; Must be enabled if any song uses the "Duty Cycle" effect (equivalent of FamiTracker Vxx, also called "Timbre").  
 ; FAMISTUDIO_USE_DUTYCYCLE_EFFECT  = 1
