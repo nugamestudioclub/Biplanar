@@ -12,6 +12,7 @@
 .include "ppulib.s"
 .include "physics.s"
 .include "data.s"
+.include "musicdatatest.s"
 
 .segment "VECTORS"
     .word  NMI
