@@ -290,6 +290,7 @@ drawplayer:
     AND #%00000111
     BNE :+
     INC p_anim_frame
+:
     LDY #$00
     LDA p_anim_frame
     CMP (player_anim), y
