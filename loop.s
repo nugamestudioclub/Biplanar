@@ -267,6 +267,25 @@ releaseswap:
 drawplayer:
     JSR oamclear       ; draw sprites
 
+    LDA on_wall
+    BNE @sliding
+    LDA x_vel+1; set player animation
+    BNE @running
+    LDA #.LOBYTE(idle_anim)
+    LDX #.HIBYTE(idle_anim)
+    BNE @set_anim
+@running:
+    LDA #.LOBYTE(running_anim)
+    LDX #.HIBYTE(running_anim)
+    BNE @set_anim
+@sliding:
+    LDA #.LOBYTE(sliding_anim)
+    LDX #.HIBYTE(sliding_anim)
+@set_anim:
+    STA player_anim+0
+    STX player_anim+1
+
+
     LDA frame_counter  ; player sprite
     AND #%00000111
     BNE :+
