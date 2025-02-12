@@ -105,3 +105,9 @@ test_metasprite:
 
 idle_anim:
     .byte $04, $00, $02, $04, $02
+
+running_anim:
+    .byte $04, $06, $08, $0A, $0C
+
+sliding_anim:
+    .byte $02, $0E, $10

@@ -268,13 +268,18 @@ drawplayer:
     JSR oamclear       ; draw sprites
 
     LDA frame_counter  ; player sprite
-    LSR
-    LSR
-    AND #%00000110
-    CMP #$06
+    AND #%00000111
     BNE :+
-    LDA #$02
+    INC p_anim_frame
+    LDY #$00
+    LDA p_anim_frame
+    CMP (player_anim), y
+    BCC :+
+    STY p_anim_frame
 :
+    LDY p_anim_frame
+    INY
+    LDA (player_anim), y
     STA R0
     LDA x_pos+1
     STA R1

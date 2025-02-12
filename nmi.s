@@ -1,4 +1,6 @@
 NMI:
+    PHP
+    PHA
     INC frame_counter
     LDA #$02           ; OAM DMA
     STA OAMDMA
@@ -61,4 +63,6 @@ setscroll:
     STA PPUSCROLL
     LDA y_scroll
     STA PPUSCROLL
+    PLA
+    PLP
     RTI
