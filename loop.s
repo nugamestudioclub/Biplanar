@@ -175,18 +175,22 @@ applyvelocity:
 player_collision:
     JSR bg_collision   ; X collision
     LDA collision
-    BEQ :+
+    BEQ @no_x_col
     LDA #$01
     STA on_wall
     LDA #$00
     STA x_vel+1
     STA x_vel+0
+    LDX player_dir
+    BNE @backwards
+    LDA #$C0
+@backwards:
     STA x_pos+0
     LDA x_pos+1
     SEC
     SBC x_eject
     STA x_pos+1
-:
+@no_x_col:
 
     CLC                ; apply Y velocity
     LDA y_pos+0
