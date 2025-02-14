@@ -39,6 +39,11 @@ RESET:
     LDA #$00        ; horizontal mirroring
     STA MAPDATA
 
+    LDA #IRQCTRL
+    STA MAPCMD
+    LDA #$00        ; disable IRQ timer
+    STA MAPDATA
+
     JSR vblankwait
 
 
