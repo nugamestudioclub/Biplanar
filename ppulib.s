@@ -1,8 +1,3 @@
-vblankwait:
-    BIT PPUSTATUS   ; returns bit 7 of ppustatus reg, which holds the vblank status with 0 being no vblank, 1 being vblank
-    BPL vblankwait
-    RTS
-
 nmiwait:
     LDA frame_counter
 :

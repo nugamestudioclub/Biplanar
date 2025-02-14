@@ -36,7 +36,7 @@ RESET:
 
     LDA #MIRROR
     STA MAPCMD
-    LDA #$00        ; horizontal mirroring
+    LDA #$00        ; horizontal arrangement
     STA MAPDATA
 
     LDA #IRQCTRL
@@ -44,8 +44,11 @@ RESET:
     LDA #$00        ; disable IRQ timer
     STA MAPDATA
 
-    JSR vblankwait
+    BIT $2002
 
+@vblankwait1:  
+    BIT $2002
+    BPL @vblankwait1
 
     LDX #$00
 
@@ -63,7 +66,9 @@ clearmem:
     INX 
     BNE clearmem
 
-    JSR vblankwait
+@vblankwait2:
+    BIT $2002
+    BPL @vblankwait2
 
 clearvram:
     LDA #$20

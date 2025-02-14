@@ -169,9 +169,9 @@ applyvelocity:
     ADC x_vel+1
     STA x_pos+1
 
-    LDA #$00            ; If 1, only set to zero if direction changed
+    LDA #$00
     STA on_wall
-
+    
 player_collision:
     JSR bg_collision   ; X collision
     LDA collision
@@ -190,8 +190,21 @@ player_collision:
     SEC
     SBC x_eject
     STA x_pos+1
+    JMP apply_y_vel
 @no_x_col:
-
+    LDA on_wall
+    BEQ apply_y_vel
+    SEC
+    LDA x_pos+0
+    SBC x_vel+0
+    STA x_pos+0
+    LDA x_pos+1
+    SBC x_vel+1
+    STA x_pos+1
+    LDA #$00
+    STA x_vel+1
+    STA x_vel+0
+apply_y_vel:
     CLC                ; apply Y velocity
     LDA y_pos+0
     ADC y_vel+0
