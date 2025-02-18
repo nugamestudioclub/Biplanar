@@ -137,9 +137,11 @@ initppu:
     LDA #%00011110      ; enable background and sprites
     STA PPUMASK
 
-clearwram:
+
     LDA #$00
+clearwram:
     STA $6000, x
+    STA $6100, x
     INX
     BNE clearwram
     LDA #BNKPRG0
@@ -147,9 +149,10 @@ clearwram:
     LDA #%11000000
     STA MAPDATA
 
-clearwram2:
     LDA #$00
+clearwram2:
     STA $6000, x
+    STA $6100, x
     INX
     BNE clearwram2
 
