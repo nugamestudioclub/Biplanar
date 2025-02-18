@@ -286,6 +286,30 @@ drawplayer:
 
     LDA on_wall
     BNE @sliding
+    LDA on_ground
+    BNE @grounded
+    LDA y_vel+1
+    CMP #$F9
+    BNE :+
+    LDA #$12
+    JMP @draw_sprite
+:
+    CMP #$FE
+    BCS @peak
+    CMP #$FA
+    BCS @upward
+    CMP #$03
+    BCC @peak
+    LDA #$18
+    JMP @draw_sprite
+@upward:
+    LDA #$14
+    JMP @draw_sprite
+@peak:
+    LDA #$16
+    JMP @draw_sprite
+
+@grounded:
     LDA x_vel+1; set player animation
     BNE @running
     LDA #.LOBYTE(idle_anim)
@@ -317,6 +341,7 @@ drawplayer:
     LDY p_anim_frame
     INY
     LDA (player_anim), y
+@draw_sprite:
     STA R0
     LDA x_pos+1
     STA R1
