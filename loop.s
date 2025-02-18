@@ -21,9 +21,6 @@ mainloop:              ; the main game tick loop
     EOR #$01
     STA dimension
 
-    LDA #$00
-    STA swapped
-
     LDA #$01        ; read controller
     STA JOY1
     STA controller     ; initialize the controller variable to $01 so that once the 8 button values are shifted in, 1 will be placed into the carry
@@ -171,64 +168,11 @@ applyvelocity:
 
     LDA #$00
     STA on_wall
-    
-player_collision:
-    JSR bg_collision   ; X collision
-    LDA collision
-    BEQ @no_x_col
-    LDA #$01
-    STA on_wall
-    LDA #$00
-    STA x_vel+1
-    STA x_vel+0
-    LDX player_dir
-    BNE @backwards
-    LDA #$C0
-@backwards:
-    STA x_pos+0
-    LDA x_pos+1
-    SEC
-    SBC x_eject
-    STA x_pos+1
-    JMP apply_y_vel
-@no_x_col:
-    LDA on_wall
-    BEQ apply_y_vel
-    SEC
-    LDA x_pos+0
-    SBC x_vel+0
-    STA x_pos+0
-    LDA x_pos+1
-    SBC x_vel+1
-    STA x_pos+1
-    LDA #$00
-    STA x_vel+1
-    STA x_vel+0
-apply_y_vel:
-    CLC                ; apply Y velocity
-    LDA y_pos+0
-    ADC y_vel+0
-    STA y_pos+0
-    LDA y_pos+1
-    ADC y_vel+1
-    STA y_pos+1
-
-    JSR bg_collision   ; Y collision
-    LDA collision
-    BEQ :+
-    LDA #$00
-    STA y_vel+1
-    STA y_vel+0
-    LDA #$C0
-    STA y_pos+0
-    LDA y_pos+1
-    SEC
-    SBC y_eject
-    STA y_pos+1
-:
 
 
-    LDX #<VRAMBUF      ; dimension switch
+    LDA #$00           ; dimension switch
+    STA swapped
+    LDX #<VRAMBUF
     LDY #>VRAMBUF
     LDA controller
     AND #BUTTON_B
@@ -285,10 +229,71 @@ apply_y_vel:
 @setbuffer:
     STX vram_pointer+0
     STY vram_pointer+1
-    JMP drawplayer
+
+    JSR bg_collision
+    LDA collision      ; If we collide on dimention switch, the player is dead.
+    STA p_is_dead
+    
+    JMP player_collision
 
 releaseswap:
     STA swap_held
+    
+player_collision:
+    JSR bg_collision   ; X collision
+    LDA collision
+    BEQ @no_x_col
+    LDA #$01
+    STA on_wall
+    LDA #$00
+    STA x_vel+1
+    STA x_vel+0
+    LDX player_dir
+    BNE @backwards
+    LDA #$C0
+@backwards:
+    STA x_pos+0
+    LDA x_pos+1
+    SEC
+    SBC x_eject
+    STA x_pos+1
+    JMP apply_y_vel
+@no_x_col:
+    LDA on_wall
+    BEQ apply_y_vel
+    SEC
+    LDA x_pos+0
+    SBC x_vel+0
+    STA x_pos+0
+    LDA x_pos+1
+    SBC x_vel+1
+    STA x_pos+1
+    LDA #$00
+    STA x_vel+1
+    STA x_vel+0
+apply_y_vel:
+    CLC                ; apply Y velocity
+    LDA y_pos+0
+    ADC y_vel+0
+    STA y_pos+0
+    LDA y_pos+1
+    ADC y_vel+1
+    STA y_pos+1
+
+    JSR bg_collision   ; Y collision
+    LDA collision
+    BEQ :+
+    LDA #$00
+    STA y_vel+1
+    STA y_vel+0
+    LDA #$C0
+    STA y_pos+0
+    LDA y_pos+1
+    SEC
+    SBC y_eject
+    STA y_pos+1
+:
+
 
 drawplayer:
     JSR oamclear       ; draw sprites
@@ -372,5 +377,8 @@ drawplayer:
     ; STA R7
     ; JSR oammetasprite
     
-
+    LDA p_is_dead                     ; If the player is dead, RESET
+    BEQ :+
+    JMP RESET
+:
     JMP mainloop

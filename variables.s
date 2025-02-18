@@ -41,6 +41,8 @@
     player_anim:   .res 2     ; The memory location of the current player animation
     p_anim_frame:  .res 1     ; The current frame of the player's animation
 
+    p_is_dead:     .res 1     ; Whether the player is dead
+
 
 .segment "RAM"                ; The rest of internal RAM after ZP, the OAM buffer, and the VRAM buffer
 .align 256
