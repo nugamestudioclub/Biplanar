@@ -12,7 +12,7 @@
 .include "ppulib.s"
 .include "physics.s"
 .include "data.s"
-.include "light_and_dark_test.s"
+.include "biplanar_feb18.s"
 
 .segment "VECTORS"
     .word  NMI

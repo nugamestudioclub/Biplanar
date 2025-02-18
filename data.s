@@ -111,3 +111,8 @@ running_anim:
 
 sliding_anim:
     .byte $02, $0E, $10
+
+dark_tiles1:
+    .byte 50, $03, $04, $05, $06
+    .byte 106, $03, $00, $00, $00
+    .byte 163, $03, $04, $05, $06
