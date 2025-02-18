@@ -353,6 +353,15 @@ drawplayer:
     JSR oamsprite
 
 
+    ; Uncomment for metasprite test
+    ; LDA #.LOBYTE(test_metasprite)   ; Load the memory address of test_metasprite into R4 and R5, so that it is passed to oammetasprite
+    ; STA R4
+    ; LDA #.HIBYTE(test_metasprite)
+    ; STA R5
+    ; LDA #128                        ; Use 128 as the X and Y pos parameters in oammetasprite
+    ; STA R6
+    ; STA R7
+    ; JSR oammetasprite
     
 
     JMP mainloop

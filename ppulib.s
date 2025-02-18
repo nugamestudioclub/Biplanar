@@ -41,6 +41,40 @@ oamsprite:          ; adds a sprite to OAM (R0: Tile Index, R1: X Position, R2: 
     STX oam_index
     RTS
 
+oammetasprite:      ; add all of the sprites in a metasprite into OAM using oamsprite
+                    ; Uses all of the registers for OAM sprite (R0-R3), and its paramaters are:
+                    ; (R4: Metasprite pointer low byte, R5: Metasprite pointer high byte, R6: Metasprite X Position, R7: Metasprite Y Position)
+                    ; It also uses R8 and R9 for scratch work.
+
+    LDY #$00
+    LDA (R4), Y     ; Loads the first byte of the metasprite into A. This is the number of sprites in the metasprite, multiplied by 4.
+                    ; This is the value of y when we want to stop looping.
+    STA R8          ; R8 Stores this value.
+:                   ; Begin loop
+    INY
+    LDA (R4), Y     ; load tile index
+    STA R0          ; Pass to oamsprite
+    INY
+    LDA (R4), Y     ; load sprite x offset
+    CLC
+    ADC R6          ; Add the x position of the metasprite
+    STA R1          ; Pass sprite x position to oamsprite
+    INY
+    LDA (R4), Y     ; load sprite y offset
+    CLC
+    ADC R7          ; Add the y position of the metasprite
+    STA R2          ; Pass sprite y position to oamsprite
+    INY
+    LDA (R4), Y     ; load sprite attribute
+    STA R3          ; Pass to oamsprite
+    STY R9          ; Temproarily store y in R9, as oamsprite will mutate it
+    JSR oamsprite
+    LDY R9          ; Bring y back
+    CPY R8          ; Branch if y ≠ the strored value to branch at
+    BNE :-
+    ;loop end
+    RTS
+
 oamclear:           ; clears OAM
     LDX #$00
     LDA #$FF        ; this Y coordinate puts the sprite off screen
