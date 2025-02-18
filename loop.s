@@ -241,6 +241,15 @@ apply_y_vel:
     LDA dimension
     EOR #$01
     STA dimension
+    LDA #BNKPRG0
+    STA MAPCMD
+    LDA #%11000000
+    AND dimension
+    STA MAPDATA
+    LDA #$80
+    STA famistudio_pulse1_prev
+    STA famistudio_pulse2_prev
+    LDA dimension
     BNE @darkworld
 @lightworld:
     ; hardcoded dimensional collision changes
