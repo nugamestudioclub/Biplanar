@@ -3,6 +3,9 @@
 .include "variables.s"
 .include "famistudio_ca65.s"
 
+.segment "DATA_MUSIC"
+.include "biplanar_feb18.s"
+
 .segment "FIXED"
 
 
@@ -12,7 +15,7 @@
 .include "ppulib.s"
 .include "physics.s"
 .include "data.s"
-.include "biplanar_feb18.s"
+
 
 .segment "VECTORS"
     .word  NMI
