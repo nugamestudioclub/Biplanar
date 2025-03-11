@@ -143,3 +143,35 @@ drawscreen:         ; draws a full screen of metatiles (A: Screen Number (0: Scr
     CPY #$F0
     BNE @loadloop
     RTS
+
+loadcolbuffer:      ; Load the given swap data into the collision swap buffers (R0: swap data address LSB, R1: swap data address MSB)
+    LDY #$00
+
+@loadloop:
+    LDA (R0),Y      ; Tilemap index of the start of the update
+    CMP #$FF
+    BEQ @done
+    STA light_col,Y
+    STA dark_col,Y
+    STA R2
+
+    INY
+    LDA (R0),Y      ; Length of the update
+    STA R3
+@innerloop:
+    INY
+    LDA (R0),Y
+    TAX
+    LDA meta_col,X
+    STA dark_col,Y
+    LDX R2
+    LDA meta_col,X
+    STA light_col,X
+    INX
+    STX R2
+
+    DEC R3
+    BNE @innerloop
+    BEQ @loadloop
+@done:
+    RTS

@@ -45,9 +45,9 @@
 
 
 .segment "RAM"                ; The rest of internal RAM after ZP, the OAM buffer, and the VRAM buffer
-.align 256
     tilemap:       .res 240   ; A map that stores which tiles are solid
-.align 256
+    light_col:     .res 16   ; The collision change buffer for the lightworld
     tilemap2:      .res 240
+    dark_col:      .res 16
 .segment "PRG_RAM0"            ; Extra cartridge RAM
 .segment "PRG_RAM1"            ; Extra cartridge RAM
