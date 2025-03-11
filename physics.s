@@ -23,14 +23,14 @@ bottom  := R1
     LSR A
     LSR A
     LSR A
-    STA R2
+    STA R2          ; The lower 4 bits store the x position of the tile in the tile map
     LDA top
-    AND #$f0
+    AND #$f0        ; The upper 4 bits store the y position of the tile in the tile map
     CLC
     ADC R2
-    TAX
+    TAX             ; X is now the index of the tile contianing the player's top-left corner
     LDA tilemap,X
-    BPL :+
+    BPL :+          ; if the tile has collision (It's MSB is 1 and thus is considered negative), collide
     INC collision
     LDA left
     AND #$0f
@@ -42,7 +42,13 @@ bottom  := R1
     SEC
     SBC #$10
     STA y_eject
+    BVC @top_right
 :
+    AND #$01         ; Death collision: if the tile is $01, the player is dead.
+    BEQ @top_right
+    STA p_is_dead
+
+@top_right:
     LDA right       ; top right corner
     LSR A
     LSR A
@@ -67,7 +73,13 @@ bottom  := R1
     SEC
     SBC #$10
     STA y_eject
+    BVC @bot_left
 :
+    AND #$01         ; Death collision: if the tile is $01, the player is dead.
+    BEQ @bot_left
+    STA p_is_dead
+
+@bot_left:
     LDA left        ; bottom left corner
     LSR A
     LSR A
@@ -93,7 +105,13 @@ bottom  := R1
     CLC
     ADC #$01
     STA y_eject
+    BVC @bot_right
 :
+    AND #$01         ; Death collision: if the tile is $01, the player is dead.
+    BEQ @bot_right
+    STA p_is_dead
+
+@bot_right:
     LDA right       ; bottom right corner
     LSR A
     LSR A
@@ -119,7 +137,13 @@ bottom  := R1
     CLC
     ADC #$01
     STA y_eject
+    BVC @end
 :
+    AND #$01         ; Death collision: if the tile is $01, the player is dead.
+    BEQ @end
+    STA p_is_dead
+
+@end:
     RTS
 .endproc
 
