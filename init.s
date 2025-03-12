@@ -172,6 +172,13 @@ initmusic:
     LDY #.HIBYTE(music_data_untitled)
     JSR famistudio_init
 
+initswap:
+    LDA #.LOBYTE(dark_tiles1)
+    STA R0
+    LDA #.HIBYTE(dark_tiles1)
+    STA R1
+    JSR loadcolbuffer
+
 initgame:
     LDA #$80        ; init player position
     STA x_pos+1

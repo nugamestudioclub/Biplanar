@@ -149,14 +149,16 @@ loadcolbuffer:      ; Load the given swap data into the collision swap buffers (
 
 @loadloop:
     LDA (R0),Y      ; Tilemap index of the start of the update
-    CMP #$FF
-    BEQ @done
     STA light_col,Y
     STA dark_col,Y
     STA R2
+    CMP #$FF
+    BEQ @done
 
     INY
     LDA (R0),Y      ; Length of the update
+    STA light_col,Y
+    STA dark_col,Y
     STA R3
 @innerloop:
     INY
@@ -165,13 +167,17 @@ loadcolbuffer:      ; Load the given swap data into the collision swap buffers (
     LDA meta_col,X
     STA dark_col,Y
     LDX R2
-    LDA meta_col,X
-    STA light_col,X
+    LDA meta_map,X
     INX
     STX R2
+    TAX
+    LDA meta_col,X
+    STA light_col,Y
+    
 
     DEC R3
     BNE @innerloop
-    BEQ @loadloop
+    INY
+    BNE @loadloop
 @done:
     RTS
