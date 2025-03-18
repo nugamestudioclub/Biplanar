@@ -10,7 +10,7 @@ writevram:          ; adds a write to the vram buffer (A: VRAM address MSB, X: V
     LDY vram_index
     STA VRAMBUF,Y
     INY
-    STA VRAMBUF,Y
+    STX VRAMBUF,Y
     TAX
     INY
     LDA R0
@@ -48,7 +48,7 @@ oammetasprite:      ; add all of the sprites in a metasprite into OAM using oams
 
     LDY #$00
     LDA (R4), Y     ; Loads the first byte of the metasprite into A. This is the number of sprites in the metasprite, multiplied by 4.
-                    ; This is the value of y when we want to stop looping.
+                    ; This is the valu ; Number of sprites multiplied by 4 (number of times to loop)e of y when we want to stop looping.
     STA R8          ; R8 Stores this value.
 :                   ; Begin loop
     INY
@@ -144,7 +144,7 @@ drawscreen:         ; draws a full screen of metatiles (A: Screen Number (0: Scr
     BNE @loadloop
     RTS
 
-loadcolbuffer:      ; Load the given swap data into the collision swap buffers (R0: swap data address LSB, R1: swap data address MSB)
+loadswapcol:      ; Load the given swap data into the collision swap buffers (R0: swap data address LSB, R1: swap data address MSB)
     LDY #$00
 
 @loadloop:
@@ -181,3 +181,22 @@ loadcolbuffer:      ; Load the given swap data into the collision swap buffers (
     BNE @loadloop
 @done:
     RTS
+
+
+loadswapvram:     ; Load the given swap data into the vram swap buffers (R0: swap data address LSB, R1: swap data address MSB)
+    LDA #$7F
+    LDY #$00
+    STA light_vram,Y
+    STA dark_vram,Y
+    LDA #$00
+    INY
+    STA light_vram,Y
+    STA dark_vram,Y
+    LDA #$20
+    INY
+    STA light_vram,Y
+    STA dark_vram,Y
+@paletteloop:
+    STA #$20
+    
+

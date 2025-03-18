@@ -177,7 +177,7 @@ initswap:
     STA R0
     LDA #.HIBYTE(dark_tiles1)
     STA R1
-    JSR loadcolbuffer
+    JSR loadswapcol
 
 initgame:
     LDA #$80        ; init player position
