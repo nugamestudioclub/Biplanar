@@ -10,7 +10,7 @@ writevram:          ; adds a write to the vram buffer (A: VRAM address MSB, X: V
     LDY vram_index
     STA VRAMBUF,Y
     INY
-    STX VRAMBUF,Y
+    STA VRAMBUF,Y
     TAX
     INY
     LDA R0
@@ -197,6 +197,6 @@ loadswapvram:     ; Load the given swap data into the vram swap buffers (R0: swa
     STA light_vram,Y
     STA dark_vram,Y
 @paletteloop:
-    STA #$20
+    LDA #$20
     
 
