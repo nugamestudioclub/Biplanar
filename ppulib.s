@@ -10,7 +10,7 @@ writevram:          ; adds a write to the vram buffer (A: VRAM address MSB, X: V
     LDY vram_index
     STA VRAMBUF,Y
     INY
-    STX VRAMBUF,Y
+    STA VRAMBUF,Y
     TAX
     INY
     LDA R0
@@ -185,18 +185,69 @@ loadswapcol:      ; Load the given swap data into the collision swap buffers (R0
 
 loadswapvram:     ; Load the given swap data into the vram swap buffers (R0: swap data address LSB, R1: swap data address MSB)
     LDA #$7F
-    LDY #$00
-    STA light_vram,Y
-    STA dark_vram,Y
+    LDX #$00
+    STA light_vram,X
+    STA dark_vram,X
     LDA #$00
-    INY
-    STA light_vram,Y
-    STA dark_vram,Y
+    INX
+    STA light_vram,X
+    STA dark_vram,X
     LDA #$20
-    INY
-    STA light_vram,Y
-    STA dark_vram,Y
+    INX
+    STA light_vram,X
+    STA dark_vram,X
+    LDY #$00
+    INX
 @paletteloop:
-    STA #$20
+    LDA lightpalette,Y
+    STA light_vram,X
+    LDA darkpalette,Y
+    STA dark_vram,X
+    INX
+    INY
+    CPX #$20
+    BNE @paletteloop
+
+    LDY #$00
+    STY R2
+@tileloop:
+    LDA (R0),Y
+    STY R3
+    TAY
+    LSR
+    LSR
+    LSR
+    LSR
+    LSR
+    LSR
+    STA light_vram,X
+    STA dark_vram,X
+    TYA
+    ASL
+    ASL
+    AND #%11000000
+    STA R4
+    TYA
+    ASL
+    AND #%00011110
+    ORA R4
+    LDY R2
+    BEQ :+
+    
+:
+    INX
+    STA light_vram,X
+    STA dark_vram,X
+    LDY R3
+    INY
+    LDA (R0),Y
+    STA light_vram,X
+    STA light_vram,Y
+
+
+
+
+
+
     
 
