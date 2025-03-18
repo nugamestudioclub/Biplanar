@@ -147,7 +147,69 @@ bottom  := R1
     RTS
 .endproc
 
+;; Takes in x,y of thing colliding and the hight and width of the hitbox. Only rectangular collsions. Check if any overlap between player and hitbox: will be some math. Figure out. The hard part is the eject amount.
+.proc sp_collision ;; Collides the player with another sprite. Params:  - R0: x of sprite to check  - R1: y of sprite to check  - R2: width of sprite to check  - R3: height of sprite to check     Mutates: R2, R3, R4, R5
+;; Player boundries
+p_left    := x_pos+1
+p_right   := R4 ; Not until initialized!
+p_top     := y_pos+1
+p_bottom  := R5 ; Not until initialized!
 
+;; Sprite boundries
+s_left    := R0
+s_right   := R2 ; Not until initialized! at this point, R2 is the sprite width!
+s_top     := R1
+s_bottom  := R3 ; Not until initialized! at this point, R3 is the sprite hight!
+
+;; Initializing state
+    ; LDA #$00
+    ; STA x_eject
+    ; STA y_eject
+    ; STA collision // will want to check collision eventually, see if collide with both
+
+;; Initializing player right and bottom
+    LDA p_left
+    CLC
+    ADC #PLAYERWIDTH-1
+    STA p_right       ; right edge
+    LDA p_top
+    CLC
+    ADC #PLAYERHEIGHT-1
+    STA p_bottom      ; bottom edge
+
+;; Initializing sprite right and bottom
+    LDA s_left
+    CLC
+    ADC #s_right-1    ; s_right is currently the sprite width
+    STA s_right       ; s_right is now the sprite right edge
+    LDA s_top
+    CLC
+    ADC #s_bottom-1   ; s_bottom is currently the sprite height
+    STA p_bottom      ; s_bottom is now the sprite bottom edge
+
+    ;; Compare p_right to s_left, branch to end if p_right < s_left
+    LDA p_right
+    CMP s_left
+    BCC @end
+    ;; Compare s_right to p_left, branch to end if s_right < p_left 
+    LDA s_right
+    CMP p_left
+    BCC @end
+    ;; Compare p_bottom to s_top, branch to end if p_bottom < s_top
+    LDA p_bottom
+    CMP s_top
+    BCC @end
+    ;; Compare s_bottom to p_top, branch to end if s_bottom < p_top
+    LDA s_bottom
+    CMP p_top
+    BCC @end
+
+    LDA #$01
+    STA p_is_dead ;; TEMPORARY: kill player on sprite collision
+
+@end:
+    RTS
+.endproc
 
 applydrag:
     LDA x_vel+0
