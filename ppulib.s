@@ -182,72 +182,152 @@ loadswapcol:      ; Load the given swap data into the collision swap buffers (R0
 @done:
     RTS
 
-
-loadswapvram:     ; Load the given swap data into the vram swap buffers (R0: swap data address LSB, R1: swap data address MSB)
-    LDA #$7F
-    LDX #$00
-    STA light_vram,X
-    STA dark_vram,X
-    LDA #$00
-    INX
-    STA light_vram,X
-    STA dark_vram,X
-    LDA #$20
-    INX
-    STA light_vram,X
-    STA dark_vram,X
+applycolbuffer:
     LDY #$00
-    INX
-@paletteloop:
-    LDA lightpalette,Y
-    STA light_vram,X
-    LDA darkpalette,Y
-    STA dark_vram,X
-    INX
+@runloop:
+    LDA (R0),Y
+    CMP #$FF
+    BEQ @done
+    TAX
     INY
-    CPX #$20
-    BNE @paletteloop
-
-    LDY #$00
-    STY R2
+    LDA (R0),Y
+    STA R2
+    INY
 @tileloop:
     LDA (R0),Y
-    STY R3
-    TAY
-    LSR
-    LSR
-    LSR
-    LSR
-    LSR
-    LSR
+    STA tilemap,X
+    INX
+    INY
+    DEC R2
+    BNE @tileloop
+    JMP @runloop
+
+@done:
+    RTS
+
+
+.proc loadswapvram      ; Load the given swap data into the vram swap buffers (R0: swap data address LSB, R1: swap data address MSB)
+swapdata     := R0
+tilehalf     := R2
+tileindex    := R3
+runsize      := R4
+tilecounter  := R5
+ytemp        := R6
+    LDA #$7F
+    STA light_vram
+    STA dark_vram
+    LDA #$00
+    STA tilehalf
+    STA light_vram+1
+    STA dark_vram+1
+    LDA #$20
+    STA light_vram+2
+    STA dark_vram+2
+    LDX #$03
+@paletteloop:
+    LDA lightpalette-3,X
+    STA light_vram,X
+    LDA darkpalette-3,X
+    STA dark_vram,X
+    INX
+    CPX #$23
+    BNE @paletteloop
+
+    LDY #$FF
+    LDA #$00
+@runloop:
+    INY
+@runloop2:
+    LDA (swapdata),Y
+    CMP #$FF
+    BNE :+
     STA light_vram,X
     STA dark_vram,X
-    TYA
+    RTS
+:
+    STA tileindex
+    LSR
+    LSR
+    LSR
+    LSR
+    LSR
+    LSR
+    ORA #$60
+    STA light_vram,X
+    STA dark_vram,X
+    LDA tileindex
     ASL
     ASL
     AND #%11000000
     STA R4
-    TYA
+    LDA tileindex
     ASL
     AND #%00011110
     ORA R4
-    LDY R2
-    BEQ :+
-    
-:
+    ORA tilehalf
     INX
     STA light_vram,X
     STA dark_vram,X
-    LDY R3
     INY
-    LDA (R0),Y
+    LDA (swapdata),Y
+    STA runsize
+    STA tilecounter
+    ASL
+    INX
     STA light_vram,X
-    STA light_vram,Y
-
-
-
-
-
-
+    STA dark_vram,X
+    INX
+@tileloop:
+    INY
+    LDA (swapdata),Y
+    STY ytemp
+    TAY
+    LDA tilehalf
+    BNE :+
+    LDA meta_ul,Y
+    STA dark_vram,X
+    INX
+    LDA meta_ur,Y
+    STA dark_vram,X
+    LDY tileindex
+    LDA meta_map,Y
+    TAY
+    LDA meta_ul,Y
+    STA light_vram-1,X
+    LDA meta_ur,Y
+    JMP @tiledone
+:
+    LDA meta_dl,Y
+    STA dark_vram,X
+    INX
+    LDA meta_dr,Y
+    STA dark_vram,X
+    LDY tileindex
+    LDA meta_map,Y
+    TAY
+    LDA meta_dl,Y
+    STA light_vram-1,X
+    LDA meta_dr,Y
+@tiledone:
+    STA light_vram,X
+    INX
+    INC tileindex
+    LDY ytemp
+    DEC tilecounter
+    BNE @tileloop
+    LDA tilehalf
+    BEQ :+
+    LDA #$00
+    STA tilehalf
+    JMP @runloop
+    :
+    LDA #%00100000
+    STA tilehalf
+    TYA
+    CLC
+    SBC runsize
+    TAY
+    JMP @runloop2    
+.endproc
     
 

@@ -196,40 +196,25 @@ applyvelocity:
     LDA dimension
     BNE @darkworld
 @lightworld:
-    ; hardcoded dimensional collision changes
-    LDA #$80
-    STA tilemap+106
-    STA tilemap+107
-    STA tilemap+108
-    LDA #$00
-    STA tilemap+162
-    STA tilemap+163
-    STA tilemap+164
-    STA tilemap+50
-    STA tilemap+51
-    STA tilemap+52
-    LDX #<lightupdate
-    LDY #>lightupdate
+    LDA #<light_col
+    STA R0
+    LDA #>light_col
+    STA R1
+    JSR applycolbuffer
+    LDX #<light_vram
+    LDY #>light_vram
     BNE @setbuffer
 @darkworld:
-    ; hardcoded dimensional collision changes
-    LDA #$80
-    STA tilemap+162
-    STA tilemap+163
-    STA tilemap+164
-    STA tilemap+50
-    STA tilemap+51
-    STA tilemap+52
-    LDA #$00
-    STA tilemap+106
-    STA tilemap+107
-    STA tilemap+108
-    LDX #<darkupdate
-    LDY #>darkupdate
+    LDA #<dark_col
+    STA R0
+    LDA #>dark_col
+    STA R1
+    JSR applycolbuffer
+    LDX #<dark_vram
+    LDY #>dark_vram
 @setbuffer:
     STX vram_pointer+0
     STY vram_pointer+1
-
     JSR bg_collision
     LDA collision      ; If we collide on dimention switch, the player is dead.
     STA p_is_dead
